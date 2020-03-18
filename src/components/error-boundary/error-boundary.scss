@@ -1,0 +1,21 @@
+@import '../../constants/style-constants.scss';
+
+.error {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    font-size: large;
+    font-weight: 600;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: $main-color;
+    .button {
+        @include button;
+        background-color: $main-color;
+        width: fit-content;
+        margin-top: 20px;
+    }
+}

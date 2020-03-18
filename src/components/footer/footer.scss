@@ -1,0 +1,13 @@
+.container-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    .footer {
+        z-index: 5;
+        height: 20px;
+        width: 100%;
+        background-color: rgb(44, 44, 44);
+        color: white;
+        text-align: center;
+    }
+}

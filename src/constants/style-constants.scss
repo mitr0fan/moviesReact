@@ -1,0 +1,18 @@
+$bg-color: white;
+$f-size-small: 10pt;
+$f-size-standart: 12pt;
+$f-size-large: 18pt;
+$main-color: rgb(245, 57, 120);
+
+@mixin button {
+    height: 30px;
+    width: 100px;
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+    outline: none;
+    &:hover {
+        cursor: pointer;
+        transform: scale(1.1);
+    }
+}

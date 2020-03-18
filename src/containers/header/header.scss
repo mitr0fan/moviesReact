@@ -1,0 +1,70 @@
+@import '../../constants/style-constants.scss';
+.header {
+    background: url(../../constants/bg.jpg) no-repeat;
+    background-size: cover;
+    background-position-y: center;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    color: white;
+    overflow: hidden;
+    .header__content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+        @media (min-width: 1000px) {
+            width: 1000px;
+        }
+        * {
+            margin-top: 10px;
+        }
+        .header__app-name {
+            font-size: $f-size-large;
+            margin-top: 0;
+        }
+        .header__input-field {
+            height: 35px;
+            .header__input {
+                margin: 0;
+                padding: 0;
+                outline: none;
+                border: none;
+                border-radius: 5px;
+                height: 100%;
+                width: 100%;
+                background-color: rgba(255, 255, 255, 0.123);
+                color: white;
+                font-size: $f-size-standart;
+                border-bottom: solid 2px rgb(245, 57, 120);
+                &:focus {
+                    background-color: rgba(255, 255, 255, 0.171);
+                }
+            }
+        }
+        .header__buttons {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            .button {
+                @include button;
+            }
+            .empty {
+                flex-grow: 1;
+            }
+            * {
+                margin-right: 20px;
+                @media (max-width: 500px) {
+                    margin-right: 5px;
+                }
+            }
+            .button_search {
+                margin-right: 0;
+            }
+            .button_active {
+                background-color: $main-color;
+            }
+        }
+    }
+}

@@ -24,6 +24,9 @@ interface Props {
 }
 
 class Header extends React.Component<Props> {
+
+    static getInitialProps({store}: any) {}
+
     constructor(props: Props) {
         super(props);
         this.handlerInput = this.handlerInput.bind(this);

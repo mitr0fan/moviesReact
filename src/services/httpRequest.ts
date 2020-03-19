@@ -1,4 +1,4 @@
-import { store } from '..';
+import store from '../store/store';
 import { changeLoadingStatus } from '../actions/movies-actions';
 
 export function http(url: string): Promise<any> {

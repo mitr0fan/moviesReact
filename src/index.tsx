@@ -4,10 +4,8 @@ import './index.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import { changeMoviesState } from './reducers/movies-reducer';
+import store from './store/store';
 
-export const store = createStore(changeMoviesState);
 
 ReactDOM.render(
     <Provider store={store}>

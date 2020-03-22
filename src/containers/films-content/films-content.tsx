@@ -31,6 +31,9 @@ function mapStateToProps(state: State) {
 }
 
 class FilmsContent extends React.Component<Props> {
+
+    static getInitialProps({store}: any) {}
+
     componentDidMount() {
         if (!this.props.selectedMovie) {
             http(CONSTANTS.URL_FILMS)

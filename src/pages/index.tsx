@@ -1,26 +1,31 @@
 import React from "react";
-import { Footer } from "../components/footer/footer";
-import Header from '../containers/header/header';
+import { MainPage } from "./main-page/main-page";
+import { connect } from "react-redux";
+import { State } from '../types/state';
+import { Loading } from "../components/loading/loading";
 
-export default class Index extends React.Component {
+class Index extends React.Component<any> {
+    static getInitialProps({state}: any) {}
+
+    loading() {
+        if(this.props.loadingStatus) {
+            return <Loading />
+        }
+    }
+
     render() {
         return (
             <>
-                <Header />
-                <Footer />
-                <style>
-                    {`
-                        body {
-                            margin: 0;
-                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
-                                'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-                                'Helvetica Neue', sans-serif;
-                            -webkit-font-smoothing: antialiased;
-                            -moz-osx-font-smoothing: grayscale;
-                        }
-                    `}
-                </style>
+            {this.loading()}
+            <MainPage />
             </>
         )
     }
 }
+
+function mapStateToProps(state: State) {
+    return {
+        loadingStatus: state.loadingStatus
+    }
+}
+export default connect(mapStateToProps)(Index);

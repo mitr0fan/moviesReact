@@ -4,6 +4,9 @@ import FilmsContent from '../../containers/films-content/films-content';
 import { Footer } from '../footer/footer';
 
 export class MainPage extends React.Component {
+
+    static getInitialProps({store}: any) {}
+
     render() {
         return (
             <Fragment>

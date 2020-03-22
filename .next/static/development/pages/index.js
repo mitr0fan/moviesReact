@@ -57,6 +57,104 @@ function _objectWithoutPropertiesLoose(source, excluded) {
 
 /***/ }),
 
+/***/ "./node_modules/function-bind/implementation.js":
+/*!******************************************************!*\
+  !*** ./node_modules/function-bind/implementation.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/* eslint no-invalid-this: 1 */
+
+var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
+var slice = Array.prototype.slice;
+var toStr = Object.prototype.toString;
+var funcType = '[object Function]';
+
+module.exports = function bind(that) {
+    var target = this;
+    if (typeof target !== 'function' || toStr.call(target) !== funcType) {
+        throw new TypeError(ERROR_MESSAGE + target);
+    }
+    var args = slice.call(arguments, 1);
+
+    var bound;
+    var binder = function () {
+        if (this instanceof bound) {
+            var result = target.apply(
+                this,
+                args.concat(slice.call(arguments))
+            );
+            if (Object(result) === result) {
+                return result;
+            }
+            return this;
+        } else {
+            return target.apply(
+                that,
+                args.concat(slice.call(arguments))
+            );
+        }
+    };
+
+    var boundLength = Math.max(0, target.length - args.length);
+    var boundArgs = [];
+    for (var i = 0; i < boundLength; i++) {
+        boundArgs.push('$' + i);
+    }
+
+    bound = Function('binder', 'return function (' + boundArgs.join(',') + '){ return binder.apply(this,arguments); }')(binder);
+
+    if (target.prototype) {
+        var Empty = function Empty() {};
+        Empty.prototype = target.prototype;
+        bound.prototype = new Empty();
+        Empty.prototype = null;
+    }
+
+    return bound;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/function-bind/index.js":
+/*!*********************************************!*\
+  !*** ./node_modules/function-bind/index.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var implementation = __webpack_require__(/*! ./implementation */ "./node_modules/function-bind/implementation.js");
+
+module.exports = Function.prototype.bind || implementation;
+
+
+/***/ }),
+
+/***/ "./node_modules/has/src/index.js":
+/*!***************************************!*\
+  !*** ./node_modules/has/src/index.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var bind = __webpack_require__(/*! function-bind */ "./node_modules/function-bind/index.js");
+
+module.exports = bind.call(Function.call, Object.prototype.hasOwnProperty);
+
+
+/***/ }),
+
 /***/ "./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js":
 /*!**********************************************************************************!*\
   !*** ./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js ***!
@@ -172,6 +270,19 @@ module.exports = hoistNonReactStatics;
 
 /***/ }),
 
+/***/ "./node_modules/native-url/dist/index.js":
+/*!***********************************************!*\
+  !*** ./node_modules/native-url/dist/index.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var e,t=(e=__webpack_require__(/*! querystring */ "./node_modules/querystring-es3/index.js"))&&"object"==typeof e&&"default"in e?e.default:e,r=/https?|ftp|gopher|file/;function o(e){"string"==typeof e&&(e=f(e));var o=function(e,t,r){var o=e.auth,a=e.hostname,s=e.protocol||"",h=e.pathname||"",c=e.hash||"",p=e.query||"",n=!1;o=o?encodeURIComponent(o).replace(/%3A/i,":")+"@":"",e.host?n=o+e.host:a&&(n=o+(~a.indexOf(":")?"["+a+"]":a),e.port&&(n+=":"+e.port)),p&&"object"==typeof p&&(p=t.encode(p));var l=e.search||p&&"?"+p||"";return s&&":"!==s.substr(-1)&&(s+=":"),e.slashes||(!s||r.test(s))&&!1!==n?(n="//"+(n||""),h&&"/"!==h[0]&&(h="/"+h)):n||(n=""),c&&"#"!==c[0]&&(c="#"+c),l&&"?"!==l[0]&&(l="?"+l),{protocol:s,host:n,pathname:h=h.replace(/[?#]/g,encodeURIComponent),search:l=l.replace("#","%23"),hash:c}}(e,t,r);return""+o.protocol+o.host+o.pathname+o.search+o.hash}var a="http://",s="w.w",h=a+s,c=/^https?|ftp|gopher|file/,p=/^(.*?)([#?].*)/,n=/^([a-z0-9.+-]*:)(\/{0,3})(.*)/i,l=/^([a-z0-9.+-]*:)?\/\/\/*/i,i=/^([a-z0-9.+-]*:)(\/{0,2})\[(.*)\]$/i;function u(e){try{return decodeURI(e)}catch(t){return e}}function f(e,r,a){void 0===r&&(r=!1),void 0===a&&(a=!1);var f=(e=e.trim()).match(p);e=f?u(f[1]).replace(/\\/g,"/")+f[2]:u(e).replace(/\\/g,"/"),i.test(e)&&"/"!==e.slice(-1)&&(e+="/");var m=!/(^javascript)/.test(e)&&e.match(n),v=l.test(e),d="";m&&(c.test(m[1])||(d=m[1].toLowerCase(),e=""+m[2]+m[3]),m[2]||(v=!1,c.test(m[1])?(d=m[1],e=""+m[3]):e="//"+m[3]),3!==m[2].length&&1!==m[2].length||(d=m[1],e="/"+m[3]));var g,b=e.match(/(:[0-9]+)/),y="";b&&b[1]&&3===b[1].length&&(e=e.replace(y=b[1],y+"00"));var w={},x="",R="";try{g=new URL(e)}catch(t){x=t,d||a||!/^\/\//.test(e)||/^\/\/.+[@.]/.test(e)||(R="/",e=e.substr(1));try{g=new URL(e,h)}catch(e){return w.protocol=d,w.href=d,w}}w.slashes=v&&!R,w.host=g.host===s?"":g.host,w.hostname=g.hostname===s?"":g.hostname.replace(/(\[|\])/g,""),w.protocol=x?d||null:g.protocol,w.search=g.search.replace(/\\/g,"%5C"),w.hash=g.hash.replace(/\\/g,"%5C");var U=e.split("#");!w.search&&~U[0].indexOf("?")&&(w.search="?"),w.hash||""!==U[1]||(w.hash="#"),w.query=r?t.decode(g.search.substr(1)):w.search.substr(1),w.pathname=R+u(g.pathname).replace(/"/g,"%22"),"about:"===w.protocol&&"blank"===w.pathname&&(w.protocol="",w.pathname=""),x&&"/"!==e[0]&&(w.pathname=w.pathname.substr(1)),d&&!c.test(d)&&"/"!==e.slice(-1)&&"/"===w.pathname&&(w.pathname=""),w.path=w.pathname+w.search,w.auth=[g.username,g.password].map(decodeURIComponent).filter(Boolean).join(":"),w.port=g.port,y&&(w.host=w.host.replace(y+"00",y),w.port=w.port.slice(0,-2)),w.href=R?""+w.pathname+w.search+w.hash:o(w);var j=/^(file)/.test(w.href)?["host","hostname"]:[];return Object.keys(w).forEach(function(e){~j.indexOf(e)||(w[e]=w[e]||null)}),w}var m=/^([a-z0-9.+-]*:\/\/\/)([a-z0-9.+-]:\/*)?/i,v=/https?|ftp|gopher|file/;function d(e,t){var r="string"==typeof e?f(e):e;e="object"==typeof e?o(e):e;var s=f(t),c="";r.protocol&&!r.slashes&&(c=r.protocol,e=e.replace(r.protocol,""),c+="/"===t[0]||"/"===e[0]?"/":""),c&&s.protocol&&(c="",s.slashes||(c=s.protocol,t=t.replace(s.protocol,"")));var p=e.match(m);p&&!s.protocol&&(e=e.substr((c=p[1]+(p[2]||"")).length),/^\/\/[^\/]/.test(t)&&(c=c.slice(0,-1)));var n=new URL(e,h+"/"),l=new URL(t,n).toString().replace(h,""),i=s.protocol||r.protocol;return i+=r.slashes||s.slashes?"//":"",!c&&i?l=l.replace(a,i):c&&(l=l.replace(a,"")),v.test(l)||~t.indexOf(".")||"/"===e.slice(-1)||"/"===t.slice(-1)||"/"!==l.slice(-1)||(l=l.slice(0,-1)),c&&(l=c+("/"===l[0]?l.substr(1):l)),l}exports.parse=f,exports.format=o,exports.resolve=d,exports.resolveObject=function(e,t){return f(d(e,t))};
+//# sourceMappingURL=index.js.map
+
+
+/***/ }),
+
 /***/ "./node_modules/next/dist/build/polyfills/object-assign.js":
 /*!***********************************************************************************************************************!*\
   !*** delegated ./node_modules/next/dist/build/polyfills/object-assign.js from dll-reference dll_0fb095e325d7ebf261c3 ***!
@@ -180,6 +291,18 @@ module.exports = hoistNonReactStatics;
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(/*! dll-reference dll_0fb095e325d7ebf261c3 */ "dll-reference dll_0fb095e325d7ebf261c3"))("./node_modules/next/dist/build/polyfills/object-assign.js");
+
+/***/ }),
+
+/***/ "./node_modules/next/dist/build/polyfills/object.assign/index.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/next/dist/build/polyfills/object.assign/index.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var assign=Object.assign.bind(Object);function g(){return assign;}Object.defineProperties(g(),{implementation:{get:g},shim:{value:g},getPolyfill:{value:g}});module.exports=g();
 
 /***/ }),
 
@@ -203,6 +326,1947 @@ module.exports = (__webpack_require__(/*! dll-reference dll_0fb095e325d7ebf261c3
       return mod
     }]);
   
+
+/***/ }),
+
+/***/ "./node_modules/next/dist/client/link.js":
+/*!***********************************************!*\
+  !*** ./node_modules/next/dist/client/link.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/next/node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+
+var _interopRequireWildcard = __webpack_require__(/*! @babel/runtime/helpers/interopRequireWildcard */ "./node_modules/next/node_modules/@babel/runtime/helpers/interopRequireWildcard.js");
+
+exports.__esModule = true;
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var _url = __webpack_require__(/*! url */ "./node_modules/native-url/dist/index.js");
+
+var _utils = __webpack_require__(/*! ../next-server/lib/utils */ "./node_modules/next/dist/next-server/lib/utils.js");
+
+var _router = _interopRequireDefault(__webpack_require__(/*! ./router */ "./node_modules/next/dist/client/router.js"));
+
+function isLocal(href) {
+  var url = (0, _url.parse)(href, false, true);
+  var origin = (0, _url.parse)((0, _utils.getLocationOrigin)(), false, true);
+  return !url.host || url.protocol === origin.protocol && url.host === origin.host;
+}
+
+function memoizedFormatUrl(formatFunc) {
+  var lastHref = null;
+  var lastAs = null;
+  var lastResult = null;
+  return (href, as) => {
+    if (lastResult && href === lastHref && as === lastAs) {
+      return lastResult;
+    }
+
+    var result = formatFunc(href, as);
+    lastHref = href;
+    lastAs = as;
+    lastResult = result;
+    return result;
+  };
+}
+
+function formatUrl(url) {
+  return url && typeof url === 'object' ? (0, _utils.formatWithValidation)(url) : url;
+}
+
+var observer;
+var listeners = new Map();
+var IntersectionObserver = true ? window.IntersectionObserver : undefined;
+var prefetched = {};
+
+function getObserver() {
+  // Return shared instance of IntersectionObserver if already created
+  if (observer) {
+    return observer;
+  } // Only create shared IntersectionObserver if supported in browser
+
+
+  if (!IntersectionObserver) {
+    return undefined;
+  }
+
+  return observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!listeners.has(entry.target)) {
+        return;
+      }
+
+      var cb = listeners.get(entry.target);
+
+      if (entry.isIntersecting || entry.intersectionRatio > 0) {
+        observer.unobserve(entry.target);
+        listeners.delete(entry.target);
+        cb();
+      }
+    });
+  }, {
+    rootMargin: '200px'
+  });
+}
+
+var listenToIntersections = (el, cb) => {
+  var observer = getObserver();
+
+  if (!observer) {
+    return () => {};
+  }
+
+  observer.observe(el);
+  listeners.set(el, cb);
+  return () => {
+    try {
+      observer.unobserve(el);
+    } catch (err) {
+      console.error(err);
+    }
+
+    listeners.delete(el);
+  };
+};
+
+class Link extends _react.Component {
+  constructor(props) {
+    super(props);
+    this.p = void 0;
+
+    this.cleanUpListeners = () => {};
+
+    this.formatUrls = memoizedFormatUrl((href, asHref) => {
+      return {
+        href: formatUrl(href),
+        as: asHref ? formatUrl(asHref) : asHref
+      };
+    });
+
+    this.linkClicked = e => {
+      var {
+        nodeName,
+        target
+      } = e.currentTarget;
+
+      if (nodeName === 'A' && (target && target !== '_self' || e.metaKey || e.ctrlKey || e.shiftKey || e.nativeEvent && e.nativeEvent.which === 2)) {
+        // ignore click for new tab / new window behavior
+        return;
+      }
+
+      var {
+        href,
+        as
+      } = this.formatUrls(this.props.href, this.props.as);
+
+      if (!isLocal(href)) {
+        // ignore click if it's outside our scope (e.g. https://google.com)
+        return;
+      }
+
+      var {
+        pathname
+      } = window.location;
+      href = (0, _url.resolve)(pathname, href);
+      as = as ? (0, _url.resolve)(pathname, as) : href;
+      e.preventDefault(); //  avoid scroll for urls with anchor refs
+
+      var {
+        scroll
+      } = this.props;
+
+      if (scroll == null) {
+        scroll = as.indexOf('#') < 0;
+      } // replace state instead of push if prop is present
+
+
+      _router.default[this.props.replace ? 'replace' : 'push'](href, as, {
+        shallow: this.props.shallow
+      }).then(success => {
+        if (!success) return;
+
+        if (scroll) {
+          window.scrollTo(0, 0);
+          document.body.focus();
+        }
+      });
+    };
+
+    if (true) {
+      if (props.prefetch) {
+        console.warn('Next.js auto-prefetches automatically based on viewport. The prefetch attribute is no longer needed. More: https://err.sh/zeit/next.js/prefetch-true-deprecated');
+      }
+    }
+
+    this.p = props.prefetch !== false;
+  }
+
+  componentWillUnmount() {
+    this.cleanUpListeners();
+  }
+
+  getPaths() {
+    var {
+      pathname
+    } = window.location;
+    var {
+      href: parsedHref,
+      as: parsedAs
+    } = this.formatUrls(this.props.href, this.props.as);
+    var resolvedHref = (0, _url.resolve)(pathname, parsedHref);
+    return [resolvedHref, parsedAs ? (0, _url.resolve)(pathname, parsedAs) : resolvedHref];
+  }
+
+  handleRef(ref) {
+    if (this.p && IntersectionObserver && ref && ref.tagName) {
+      this.cleanUpListeners();
+      var isPrefetched = prefetched[this.getPaths().join( // Join on an invalid URI character
+      '%')];
+
+      if (!isPrefetched) {
+        this.cleanUpListeners = listenToIntersections(ref, () => {
+          this.prefetch();
+        });
+      }
+    }
+  } // The function is memoized so that no extra lifecycles are needed
+  // as per https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html
+
+
+  prefetch(options) {
+    if (!this.p || false) return; // Prefetch the JSON page if asked (only in the client)
+
+    var paths = this.getPaths(); // We need to handle a prefetch error here since we may be
+    // loading with priority which can reject but we don't
+    // want to force navigation since this is only a prefetch
+
+    _router.default.prefetch(paths[
+    /* href */
+    0], paths[
+    /* asPath */
+    1], options).catch(err => {
+      if (true) {
+        // rethrow to show invalid URL errors
+        throw err;
+      }
+    });
+
+    prefetched[paths.join( // Join on an invalid URI character
+    '%')] = true;
+  }
+
+  render() {
+    var {
+      children
+    } = this.props;
+    var {
+      href,
+      as
+    } = this.formatUrls(this.props.href, this.props.as); // Deprecated. Warning shown by propType check. If the children provided is a string (<Link>example</Link>) we wrap it in an <a> tag
+
+    if (typeof children === 'string') {
+      children = _react.default.createElement("a", null, children);
+    } // This will return the first child, if multiple are provided it will throw an error
+
+
+    var child = _react.Children.only(children);
+
+    var props = {
+      ref: el => {
+        this.handleRef(el);
+
+        if (child && typeof child === 'object' && child.ref) {
+          if (typeof child.ref === 'function') child.ref(el);else if (typeof child.ref === 'object') {
+            child.ref.current = el;
+          }
+        }
+      },
+      onMouseEnter: e => {
+        if (child.props && typeof child.props.onMouseEnter === 'function') {
+          child.props.onMouseEnter(e);
+        }
+
+        this.prefetch({
+          priority: true
+        });
+      },
+      onClick: e => {
+        if (child.props && typeof child.props.onClick === 'function') {
+          child.props.onClick(e);
+        }
+
+        if (!e.defaultPrevented) {
+          this.linkClicked(e);
+        }
+      }
+    }; // If child is an <a> tag and doesn't have a href attribute, or if the 'passHref' property is
+    // defined, we specify the current 'href', so that repetition is not needed by the user
+
+    if (this.props.passHref || child.type === 'a' && !('href' in child.props)) {
+      props.href = as || href;
+    } // Add the ending slash to the paths. So, we can serve the
+    // "<page>/index.html" directly.
+
+
+    if (false) { var rewriteUrlForNextExport; }
+
+    return _react.default.cloneElement(child, props);
+  }
+
+}
+
+if (true) {
+  var warn = (0, _utils.execOnce)(console.error); // This module gets removed by webpack.IgnorePlugin
+
+  var PropTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+  var exact = __webpack_require__(/*! prop-types-exact */ "./node_modules/prop-types-exact/build/index.js"); // @ts-ignore the property is supported, when declaring it on the class it outputs an extra bit of code which is not needed.
+
+
+  Link.propTypes = exact({
+    href: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+    as: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    prefetch: PropTypes.bool,
+    replace: PropTypes.bool,
+    shallow: PropTypes.bool,
+    passHref: PropTypes.bool,
+    scroll: PropTypes.bool,
+    children: PropTypes.oneOfType([PropTypes.element, (props, propName) => {
+      var value = props[propName];
+
+      if (typeof value === 'string') {
+        warn("Warning: You're using a string directly inside <Link>. This usage has been deprecated. Please add an <a> tag as child of <Link>");
+      }
+
+      return null;
+    }]).isRequired
+  });
+}
+
+var _default = Link;
+exports.default = _default;
+
+/***/ }),
+
+/***/ "./node_modules/next/dist/client/router.js":
+/*!*************************************************!*\
+  !*** ./node_modules/next/dist/client/router.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireWildcard = __webpack_require__(/*! @babel/runtime/helpers/interopRequireWildcard */ "./node_modules/next/node_modules/@babel/runtime/helpers/interopRequireWildcard.js");
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/next/node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+
+exports.__esModule = true;
+exports.useRouter = useRouter;
+exports.makePublicRouterInstance = makePublicRouterInstance;
+exports.createRouter = exports.withRouter = exports.default = void 0;
+
+var _react = _interopRequireDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var _router2 = _interopRequireWildcard(__webpack_require__(/*! ../next-server/lib/router/router */ "./node_modules/next/dist/next-server/lib/router/router.js"));
+
+exports.Router = _router2.default;
+exports.NextRouter = _router2.NextRouter;
+
+var _routerContext = __webpack_require__(/*! ../next-server/lib/router-context */ "./node_modules/next/dist/next-server/lib/router-context.js");
+
+var _withRouter = _interopRequireDefault(__webpack_require__(/*! ./with-router */ "./node_modules/next/dist/client/with-router.js"));
+
+exports.withRouter = _withRouter.default;
+/* global window */
+
+var singletonRouter = {
+  router: null,
+  // holds the actual router instance
+  readyCallbacks: [],
+
+  ready(cb) {
+    if (this.router) return cb();
+
+    if (true) {
+      this.readyCallbacks.push(cb);
+    }
+  }
+
+}; // Create public properties and methods of the router in the singletonRouter
+
+var urlPropertyFields = ['pathname', 'route', 'query', 'asPath', 'components', 'isFallback'];
+var routerEvents = ['routeChangeStart', 'beforeHistoryChange', 'routeChangeComplete', 'routeChangeError', 'hashChangeStart', 'hashChangeComplete'];
+var coreMethodFields = ['push', 'replace', 'reload', 'back', 'prefetch', 'beforePopState']; // Events is a static property on the router, the router doesn't have to be initialized to use it
+
+Object.defineProperty(singletonRouter, 'events', {
+  get() {
+    return _router2.default.events;
+  }
+
+});
+urlPropertyFields.forEach(field => {
+  // Here we need to use Object.defineProperty because, we need to return
+  // the property assigned to the actual router
+  // The value might get changed as we change routes and this is the
+  // proper way to access it
+  Object.defineProperty(singletonRouter, field, {
+    get() {
+      var router = getRouter();
+      return router[field];
+    }
+
+  });
+});
+coreMethodFields.forEach(field => {
+  // We don't really know the types here, so we add them later instead
+  ;
+
+  singletonRouter[field] = function () {
+    var router = getRouter();
+    return router[field](...arguments);
+  };
+});
+routerEvents.forEach(event => {
+  singletonRouter.ready(() => {
+    _router2.default.events.on(event, function () {
+      var eventField = "on" + event.charAt(0).toUpperCase() + event.substring(1);
+      var _singletonRouter = singletonRouter;
+
+      if (_singletonRouter[eventField]) {
+        try {
+          _singletonRouter[eventField](...arguments);
+        } catch (err) {
+          // tslint:disable-next-line:no-console
+          console.error("Error when running the Router event: " + eventField); // tslint:disable-next-line:no-console
+
+          console.error(err.message + "\n" + err.stack);
+        }
+      }
+    });
+  });
+});
+
+function getRouter() {
+  if (!singletonRouter.router) {
+    var message = 'No router instance found.\n' + 'You should only use "next/router" inside the client side of your app.\n';
+    throw new Error(message);
+  }
+
+  return singletonRouter.router;
+} // Export the singletonRouter and this is the public API.
+
+
+var _default = singletonRouter; // Reexport the withRoute HOC
+
+exports.default = _default;
+
+function useRouter() {
+  return _react.default.useContext(_routerContext.RouterContext);
+} // INTERNAL APIS
+// -------------
+// (do not use following exports inside the app)
+// Create a router and assign it as the singleton instance.
+// This is used in client side when we are initilizing the app.
+// This should **not** use inside the server.
+
+
+var createRouter = function createRouter() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  singletonRouter.router = new _router2.default(...args);
+  singletonRouter.readyCallbacks.forEach(cb => cb());
+  singletonRouter.readyCallbacks = [];
+  return singletonRouter.router;
+}; // This function is used to create the `withRouter` router instance
+
+
+exports.createRouter = createRouter;
+
+function makePublicRouterInstance(router) {
+  var _router = router;
+  var instance = {};
+
+  for (var property of urlPropertyFields) {
+    if (typeof _router[property] === 'object') {
+      instance[property] = Object.assign({}, _router[property]); // makes sure query is not stateful
+
+      continue;
+    }
+
+    instance[property] = _router[property];
+  } // Events is a static property on the router, the router doesn't have to be initialized to use it
+
+
+  instance.events = _router2.default.events;
+  coreMethodFields.forEach(field => {
+    instance[field] = function () {
+      return _router[field](...arguments);
+    };
+  });
+  return instance;
+}
+
+/***/ }),
+
+/***/ "./node_modules/next/dist/client/with-router.js":
+/*!******************************************************!*\
+  !*** ./node_modules/next/dist/client/with-router.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/next/node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+
+exports.__esModule = true;
+exports.default = withRouter;
+
+var _react = _interopRequireDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var _router = __webpack_require__(/*! ./router */ "./node_modules/next/dist/client/router.js");
+
+function withRouter(ComposedComponent) {
+  function WithRouterWrapper(props) {
+    return _react.default.createElement(ComposedComponent, Object.assign({
+      router: (0, _router.useRouter)()
+    }, props));
+  }
+
+  WithRouterWrapper.getInitialProps = ComposedComponent.getInitialProps // This is needed to allow checking for custom getInitialProps in _app
+  ;
+  WithRouterWrapper.origGetInitialProps = ComposedComponent.origGetInitialProps;
+
+  if (true) {
+    var name = ComposedComponent.displayName || ComposedComponent.name || 'Unknown';
+    WithRouterWrapper.displayName = "withRouter(" + name + ")";
+  }
+
+  return WithRouterWrapper;
+}
+
+/***/ }),
+
+/***/ "./node_modules/next/dist/next-server/lib/mitt.js":
+/*!********************************************************!*\
+  !*** ./node_modules/next/dist/next-server/lib/mitt.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/*
+MIT License
+
+Copyright (c) Jason Miller (https://jasonformat.com/)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function mitt() {
+  const all = Object.create(null);
+  return {
+    on(type, handler) {
+      ;
+      (all[type] || (all[type] = [])).push(handler);
+    },
+
+    off(type, handler) {
+      if (all[type]) {
+        // tslint:disable-next-line:no-bitwise
+        all[type].splice(all[type].indexOf(handler) >>> 0, 1);
+      }
+    },
+
+    emit(type, ...evts) {
+      // eslint-disable-next-line array-callback-return
+      ;
+      (all[type] || []).slice().map(handler => {
+        handler(...evts);
+      });
+    }
+
+  };
+}
+
+exports.default = mitt;
+
+/***/ }),
+
+/***/ "./node_modules/next/dist/next-server/lib/router-context.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/next/dist/next-server/lib/router-context.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+  result["default"] = mod;
+  return result;
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+const React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+exports.RouterContext = React.createContext(null);
+
+/***/ }),
+
+/***/ "./node_modules/next/dist/next-server/lib/router/router.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/next/dist/next-server/lib/router/router.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+const url_1 = __webpack_require__(/*! url */ "./node_modules/native-url/dist/index.js");
+
+const mitt_1 = __importDefault(__webpack_require__(/*! ../mitt */ "./node_modules/next/dist/next-server/lib/mitt.js"));
+
+const utils_1 = __webpack_require__(/*! ../utils */ "./node_modules/next/dist/next-server/lib/utils.js");
+
+const is_dynamic_1 = __webpack_require__(/*! ./utils/is-dynamic */ "./node_modules/next/dist/next-server/lib/router/utils/is-dynamic.js");
+
+const route_matcher_1 = __webpack_require__(/*! ./utils/route-matcher */ "./node_modules/next/dist/next-server/lib/router/utils/route-matcher.js");
+
+const route_regex_1 = __webpack_require__(/*! ./utils/route-regex */ "./node_modules/next/dist/next-server/lib/router/utils/route-regex.js");
+
+function addBasePath(path) {
+  // variable is always a string
+  const p = "";
+  return path.indexOf(p) !== 0 ? p + path : path;
+}
+
+function toRoute(path) {
+  return path.replace(/\/$/, '') || '/';
+}
+
+const prepareRoute = path => toRoute(!path || path === '/' ? '/index' : path);
+
+function fetchNextData(pathname, query, isServerRender, cb) {
+  let attempts = isServerRender ? 3 : 1;
+
+  function getResponse() {
+    return fetch(utils_1.formatWithValidation({
+      // @ts-ignore __NEXT_DATA__
+      pathname: "/_next/data/".concat(__NEXT_DATA__.buildId).concat(pathname, ".json"),
+      query
+    }), {
+      // Cookies are required to be present for Next.js' SSG "Preview Mode".
+      // Cookies may also be required for `getServerSideProps`.
+      //
+      // > `fetch` won’t send cookies, unless you set the credentials init
+      // > option.
+      // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+      //
+      // > For maximum browser compatibility when it comes to sending &
+      // > receiving cookies, always supply the `credentials: 'same-origin'`
+      // > option instead of relying on the default.
+      // https://github.com/github/fetch#caveats
+      credentials: 'same-origin'
+    }).then(res => {
+      if (!res.ok) {
+        if (--attempts > 0 && res.status >= 500) {
+          return getResponse();
+        }
+
+        throw new Error("Failed to load static props");
+      }
+
+      return res.json();
+    });
+  }
+
+  return getResponse().then(data => {
+    return cb ? cb(data) : data;
+  }).catch(err => {
+    // We should only trigger a server-side transition if this was caused
+    // on a client-side transition. Otherwise, we'd get into an infinite
+    // loop.
+    if (!isServerRender) {
+      ;
+      err.code = 'PAGE_LOAD_ERROR';
+    }
+
+    throw err;
+  });
+}
+
+class Router {
+  constructor(pathname, query, as, {
+    initialProps,
+    pageLoader,
+    App,
+    wrapApp,
+    Component,
+    err,
+    subscription,
+    isFallback
+  }) {
+    // Static Data Cache
+    this.sdc = {};
+
+    this.onPopState = e => {
+      if (!e.state) {
+        // We get state as undefined for two reasons.
+        //  1. With older safari (< 8) and older chrome (< 34)
+        //  2. When the URL changed with #
+        //
+        // In the both cases, we don't need to proceed and change the route.
+        // (as it's already changed)
+        // But we can simply replace the state with the new changes.
+        // Actually, for (1) we don't need to nothing. But it's hard to detect that event.
+        // So, doing the following for (1) does no harm.
+        const {
+          pathname,
+          query
+        } = this;
+        this.changeState('replaceState', utils_1.formatWithValidation({
+          pathname,
+          query
+        }), utils_1.getURL());
+        return;
+      } // Make sure we don't re-render on initial load,
+      // can be caused by navigating back from an external site
+
+
+      if (e.state && this.isSsr && e.state.as === this.asPath && url_1.parse(e.state.url).pathname === this.pathname) {
+        return;
+      } // If the downstream application returns falsy, return.
+      // They will then be responsible for handling the event.
+
+
+      if (this._bps && !this._bps(e.state)) {
+        return;
+      }
+
+      const {
+        url,
+        as,
+        options
+      } = e.state;
+
+      if (true) {
+        if (typeof url === 'undefined' || typeof as === 'undefined') {
+          console.warn('`popstate` event triggered but `event.state` did not have `url` or `as` https://err.sh/zeit/next.js/popstate-state-empty');
+        }
+      }
+
+      this.replace(url, as, options);
+    };
+
+    this._getStaticData = asPath => {
+      const pathname = prepareRoute(url_1.parse(asPath).pathname);
+      return  false ? undefined : fetchNextData(pathname, null, this.isSsr, data => this.sdc[pathname] = data);
+    };
+
+    this._getServerData = asPath => {
+      let {
+        pathname,
+        query
+      } = url_1.parse(asPath, true);
+      pathname = prepareRoute(pathname);
+      return fetchNextData(pathname, query, this.isSsr);
+    }; // represents the current component key
+
+
+    this.route = toRoute(pathname); // set up the component cache (by route keys)
+
+    this.components = {}; // We should not keep the cache, if there's an error
+    // Otherwise, this cause issues when when going back and
+    // come again to the errored page.
+
+    if (pathname !== '/_error') {
+      this.components[this.route] = {
+        Component,
+        props: initialProps,
+        err,
+        __N_SSG: initialProps && initialProps.__N_SSG,
+        __N_SSP: initialProps && initialProps.__N_SSP
+      };
+    }
+
+    this.components['/_app'] = {
+      Component: App
+    }; // Backwards compat for Router.router.events
+    // TODO: Should be remove the following major version as it was never documented
+
+    this.events = Router.events;
+    this.pageLoader = pageLoader;
+    this.pathname = pathname;
+    this.query = query; // if auto prerendered and dynamic route wait to update asPath
+    // until after mount to prevent hydration mismatch
+
+    this.asPath = // @ts-ignore this is temporarily global (attached to window)
+    is_dynamic_1.isDynamicRoute(pathname) && __NEXT_DATA__.autoExport ? pathname : as;
+    this.sub = subscription;
+    this.clc = null;
+    this._wrapApp = wrapApp; // make sure to ignore extra popState in safari on navigating
+    // back from external site
+
+    this.isSsr = true;
+    this.isFallback = isFallback;
+
+    if (true) {
+      // in order for `e.state` to work on the `onpopstate` event
+      // we have to register the initial route upon initialization
+      this.changeState('replaceState', utils_1.formatWithValidation({
+        pathname,
+        query
+      }), as);
+      window.addEventListener('popstate', this.onPopState);
+    }
+  } // @deprecated backwards compatibility even though it's a private method.
+
+
+  static _rewriteUrlForNextExport(url) {
+    if (false) {} else {
+      return url;
+    }
+  }
+
+  update(route, mod) {
+    const Component = mod.default || mod;
+    const data = this.components[route];
+
+    if (!data) {
+      throw new Error("Cannot update unavailable route: ".concat(route));
+    }
+
+    const newData = Object.assign(Object.assign({}, data), {
+      Component,
+      __N_SSG: mod.__N_SSG,
+      __N_SSP: mod.__N_SSP
+    });
+    this.components[route] = newData; // pages/_app.js updated
+
+    if (route === '/_app') {
+      this.notify(this.components[this.route]);
+      return;
+    }
+
+    if (route === this.route) {
+      this.notify(newData);
+    }
+  }
+
+  reload() {
+    window.location.reload();
+  }
+  /**
+   * Go back in history
+   */
+
+
+  back() {
+    window.history.back();
+  }
+  /**
+   * Performs a `pushState` with arguments
+   * @param url of the route
+   * @param as masks `url` for the browser
+   * @param options object you can define `shallow` and other options
+   */
+
+
+  push(url, as = url, options = {}) {
+    return this.change('pushState', url, as, options);
+  }
+  /**
+   * Performs a `replaceState` with arguments
+   * @param url of the route
+   * @param as masks `url` for the browser
+   * @param options object you can define `shallow` and other options
+   */
+
+
+  replace(url, as = url, options = {}) {
+    return this.change('replaceState', url, as, options);
+  }
+
+  change(method, _url, _as, options) {
+    return new Promise((resolve, reject) => {
+      if (!options._h) {
+        this.isSsr = false;
+      } // marking route changes as a navigation start entry
+
+
+      if (utils_1.ST) {
+        performance.mark('routeChange');
+      } // If url and as provided as an object representation,
+      // we'll format them into the string version here.
+
+
+      const url = typeof _url === 'object' ? utils_1.formatWithValidation(_url) : _url;
+      let as = typeof _as === 'object' ? utils_1.formatWithValidation(_as) : _as; // Add the ending slash to the paths. So, we can serve the
+      // "<page>/index.html" directly for the SSR page.
+
+      if (false) {}
+
+      this.abortComponentLoad(as); // If the url change is only related to a hash change
+      // We should not proceed. We should only change the state.
+      // WARNING: `_h` is an internal option for handing Next.js client-side
+      // hydration. Your app should _never_ use this property. It may change at
+      // any time without notice.
+
+      if (!options._h && this.onlyAHashChange(as)) {
+        this.asPath = as;
+        Router.events.emit('hashChangeStart', as);
+        this.changeState(method, url, addBasePath(as), options);
+        this.scrollToHash(as);
+        Router.events.emit('hashChangeComplete', as);
+        return resolve(true);
+      }
+
+      const {
+        pathname,
+        query,
+        protocol
+      } = url_1.parse(url, true);
+
+      if (!pathname || protocol) {
+        if (true) {
+          throw new Error("Invalid href passed to router: ".concat(url, " https://err.sh/zeit/next.js/invalid-href-passed"));
+        }
+
+        return resolve(false);
+      } // If asked to change the current URL we should reload the current page
+      // (not location.reload() but reload getInitialProps and other Next.js stuffs)
+      // We also need to set the method = replaceState always
+      // as this should not go into the history (That's how browsers work)
+      // We should compare the new asPath to the current asPath, not the url
+
+
+      if (!this.urlIsNew(as)) {
+        method = 'replaceState';
+      }
+
+      const route = toRoute(pathname);
+      const {
+        shallow = false
+      } = options;
+
+      if (is_dynamic_1.isDynamicRoute(route)) {
+        const {
+          pathname: asPathname
+        } = url_1.parse(as);
+        const routeRegex = route_regex_1.getRouteRegex(route);
+        const routeMatch = route_matcher_1.getRouteMatcher(routeRegex)(asPathname);
+
+        if (!routeMatch) {
+          const missingParams = Object.keys(routeRegex.groups).filter(param => !query[param]);
+
+          if (missingParams.length > 0) {
+            if (true) {
+              console.warn("Mismatching `as` and `href` failed to manually provide " + "the params: ".concat(missingParams.join(', '), " in the `href`'s `query`"));
+            }
+
+            return reject(new Error("The provided `as` value (".concat(asPathname, ") is incompatible with the `href` value (").concat(route, "). ") + "Read more: https://err.sh/zeit/next.js/incompatible-href-as"));
+          }
+        } else {
+          // Merge params into `query`, overwriting any specified in search
+          Object.assign(query, routeMatch);
+        }
+      }
+
+      Router.events.emit('routeChangeStart', as); // If shallow is true and the route exists in the router cache we reuse the previous result
+
+      this.getRouteInfo(route, pathname, query, as, shallow).then(routeInfo => {
+        const {
+          error
+        } = routeInfo;
+
+        if (error && error.cancelled) {
+          return resolve(false);
+        }
+
+        Router.events.emit('beforeHistoryChange', as);
+        this.changeState(method, url, addBasePath(as), options);
+
+        if (true) {
+          const appComp = this.components['/_app'].Component;
+          window.next.isPrerendered = appComp.getInitialProps === appComp.origGetInitialProps && !routeInfo.Component.getInitialProps;
+        }
+
+        this.set(route, pathname, query, as, routeInfo);
+
+        if (error) {
+          Router.events.emit('routeChangeError', error, as);
+          throw error;
+        }
+
+        Router.events.emit('routeChangeComplete', as);
+        return resolve(true);
+      }, reject);
+    });
+  }
+
+  changeState(method, url, as, options = {}) {
+    if (true) {
+      if (typeof window.history === 'undefined') {
+        console.error("Warning: window.history is not available.");
+        return;
+      }
+
+      if (typeof window.history[method] === 'undefined') {
+        console.error("Warning: window.history.".concat(method, " is not available"));
+        return;
+      }
+    }
+
+    if (method !== 'pushState' || utils_1.getURL() !== as) {
+      window.history[method]({
+        url,
+        as,
+        options
+      }, // Most browsers currently ignores this parameter, although they may use it in the future.
+      // Passing the empty string here should be safe against future changes to the method.
+      // https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState
+      '', as);
+    }
+  }
+
+  getRouteInfo(route, pathname, query, as, shallow = false) {
+    const cachedRouteInfo = this.components[route]; // If there is a shallow route transition possible
+    // If the route is already rendered on the screen.
+
+    if (shallow && cachedRouteInfo && this.route === route) {
+      return Promise.resolve(cachedRouteInfo);
+    }
+
+    const handleError = (err, loadErrorFail) => {
+      return new Promise(resolve => {
+        if (err.code === 'PAGE_LOAD_ERROR' || loadErrorFail) {
+          // If we can't load the page it could be one of following reasons
+          //  1. Page doesn't exists
+          //  2. Page does exist in a different zone
+          //  3. Internal error while loading the page
+          // So, doing a hard reload is the proper way to deal with this.
+          window.location.href = as; // Changing the URL doesn't block executing the current code path.
+          // So, we need to mark it as a cancelled error and stop the routing logic.
+
+          err.cancelled = true; // @ts-ignore TODO: fix the control flow here
+
+          return resolve({
+            error: err
+          });
+        }
+
+        if (err.cancelled) {
+          // @ts-ignore TODO: fix the control flow here
+          return resolve({
+            error: err
+          });
+        }
+
+        resolve(this.fetchComponent('/_error').then(res => {
+          const {
+            page: Component
+          } = res;
+          const routeInfo = {
+            Component,
+            err
+          };
+          return new Promise(resolve => {
+            this.getInitialProps(Component, {
+              err,
+              pathname,
+              query
+            }).then(props => {
+              routeInfo.props = props;
+              routeInfo.error = err;
+              resolve(routeInfo);
+            }, gipErr => {
+              console.error('Error in error page `getInitialProps`: ', gipErr);
+              routeInfo.error = err;
+              routeInfo.props = {};
+              resolve(routeInfo);
+            });
+          });
+        }).catch(err => handleError(err, true)));
+      });
+    };
+
+    return new Promise((resolve, reject) => {
+      if (cachedRouteInfo) {
+        return resolve(cachedRouteInfo);
+      }
+
+      this.fetchComponent(route).then(res => resolve({
+        Component: res.page,
+        __N_SSG: res.mod.__N_SSG,
+        __N_SSP: res.mod.__N_SSP
+      }), reject);
+    }).then(routeInfo => {
+      const {
+        Component,
+        __N_SSG,
+        __N_SSP
+      } = routeInfo;
+
+      if (true) {
+        const {
+          isValidElementType
+        } = __webpack_require__(/*! react-is */ "./node_modules/next/node_modules/react-is/index.js");
+
+        if (!isValidElementType(Component)) {
+          throw new Error("The default export is not a React Component in page: \"".concat(pathname, "\""));
+        }
+      }
+
+      return this._getData(() => __N_SSG ? this._getStaticData(as) : __N_SSP ? this._getServerData(as) : this.getInitialProps(Component, // we provide AppTree later so this needs to be `any`
+      {
+        pathname,
+        query,
+        asPath: as
+      })).then(props => {
+        routeInfo.props = props;
+        this.components[route] = routeInfo;
+        return routeInfo;
+      });
+    }).catch(handleError);
+  }
+
+  set(route, pathname, query, as, data) {
+    this.isFallback = false;
+    this.route = route;
+    this.pathname = pathname;
+    this.query = query;
+    this.asPath = as;
+    this.notify(data);
+  }
+  /**
+   * Callback to execute before replacing router state
+   * @param cb callback to be executed
+   */
+
+
+  beforePopState(cb) {
+    this._bps = cb;
+  }
+
+  onlyAHashChange(as) {
+    if (!this.asPath) return false;
+    const [oldUrlNoHash, oldHash] = this.asPath.split('#');
+    const [newUrlNoHash, newHash] = as.split('#'); // Makes sure we scroll to the provided hash if the url/hash are the same
+
+    if (newHash && oldUrlNoHash === newUrlNoHash && oldHash === newHash) {
+      return true;
+    } // If the urls are change, there's more than a hash change
+
+
+    if (oldUrlNoHash !== newUrlNoHash) {
+      return false;
+    } // If the hash has changed, then it's a hash only change.
+    // This check is necessary to handle both the enter and
+    // leave hash === '' cases. The identity case falls through
+    // and is treated as a next reload.
+
+
+    return oldHash !== newHash;
+  }
+
+  scrollToHash(as) {
+    const [, hash] = as.split('#'); // Scroll to top if the hash is just `#` with no value
+
+    if (hash === '') {
+      window.scrollTo(0, 0);
+      return;
+    } // First we check if the element by id is found
+
+
+    const idEl = document.getElementById(hash);
+
+    if (idEl) {
+      idEl.scrollIntoView();
+      return;
+    } // If there's no element with the id, we check the `name` property
+    // To mirror browsers
+
+
+    const nameEl = document.getElementsByName(hash)[0];
+
+    if (nameEl) {
+      nameEl.scrollIntoView();
+    }
+  }
+
+  urlIsNew(asPath) {
+    return this.asPath !== asPath;
+  }
+  /**
+   * Prefetch page code, you may wait for the data during page rendering.
+   * This feature only works in production!
+   * @param url the href of prefetched page
+   * @param asPath the as path of the prefetched page
+   */
+
+
+  prefetch(url, asPath = url, options = {}) {
+    return new Promise((resolve, reject) => {
+      const {
+        pathname,
+        protocol
+      } = url_1.parse(url);
+
+      if (!pathname || protocol) {
+        if (true) {
+          throw new Error("Invalid href passed to router: ".concat(url, " https://err.sh/zeit/next.js/invalid-href-passed"));
+        }
+
+        return;
+      } // Prefetch is not supported in development mode because it would trigger on-demand-entries
+
+
+      if (true) {
+        return;
+      }
+
+      Promise.all([this.pageLoader.prefetchData(url, asPath), this.pageLoader[options.priority ? 'loadPage' : 'prefetch'](toRoute(pathname))]).then(() => resolve(), reject);
+    });
+  }
+
+  async fetchComponent(route) {
+    let cancelled = false;
+
+    const cancel = this.clc = () => {
+      cancelled = true;
+    };
+
+    const componentResult = await this.pageLoader.loadPage(route);
+
+    if (cancelled) {
+      const error = new Error("Abort fetching component for route: \"".concat(route, "\""));
+      error.cancelled = true;
+      throw error;
+    }
+
+    if (cancel === this.clc) {
+      this.clc = null;
+    }
+
+    return componentResult;
+  }
+
+  _getData(fn) {
+    let cancelled = false;
+
+    const cancel = () => {
+      cancelled = true;
+    };
+
+    this.clc = cancel;
+    return fn().then(data => {
+      if (cancel === this.clc) {
+        this.clc = null;
+      }
+
+      if (cancelled) {
+        const err = new Error('Loading initial props cancelled');
+        err.cancelled = true;
+        throw err;
+      }
+
+      return data;
+    });
+  }
+
+  getInitialProps(Component, ctx) {
+    const {
+      Component: App
+    } = this.components['/_app'];
+
+    const AppTree = this._wrapApp(App);
+
+    ctx.AppTree = AppTree;
+    return utils_1.loadGetInitialProps(App, {
+      AppTree,
+      Component,
+      router: this,
+      ctx
+    });
+  }
+
+  abortComponentLoad(as) {
+    if (this.clc) {
+      const e = new Error('Route Cancelled');
+      e.cancelled = true;
+      Router.events.emit('routeChangeError', e, as);
+      this.clc();
+      this.clc = null;
+    }
+  }
+
+  notify(data) {
+    this.sub(data, this.components['/_app'].Component);
+  }
+
+}
+
+exports.default = Router;
+Router.events = mitt_1.default();
+
+/***/ }),
+
+/***/ "./node_modules/next/dist/next-server/lib/router/utils/is-dynamic.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/next/dist/next-server/lib/router/utils/is-dynamic.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+}); // Identify /[param]/ in route string
+
+const TEST_ROUTE = /\/\[[^/]+?\](?=\/|$)/;
+
+function isDynamicRoute(route) {
+  return TEST_ROUTE.test(route);
+}
+
+exports.isDynamicRoute = isDynamicRoute;
+
+/***/ }),
+
+/***/ "./node_modules/next/dist/next-server/lib/router/utils/route-matcher.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/next/dist/next-server/lib/router/utils/route-matcher.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function getRouteMatcher(routeRegex) {
+  const {
+    re,
+    groups
+  } = routeRegex;
+  return pathname => {
+    const routeMatch = re.exec(pathname);
+
+    if (!routeMatch) {
+      return false;
+    }
+
+    const decode = decodeURIComponent;
+    const params = {};
+    Object.keys(groups).forEach(slugName => {
+      const g = groups[slugName];
+      const m = routeMatch[g.pos];
+
+      if (m !== undefined) {
+        params[slugName] = ~m.indexOf('/') ? m.split('/').map(entry => decode(entry)) : g.repeat ? [decode(m)] : decode(m);
+      }
+    });
+    return params;
+  };
+}
+
+exports.getRouteMatcher = getRouteMatcher;
+
+/***/ }),
+
+/***/ "./node_modules/next/dist/next-server/lib/router/utils/route-regex.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/next/dist/next-server/lib/router/utils/route-regex.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function getRouteRegex(normalizedRoute) {
+  // Escape all characters that could be considered RegEx
+  const escapedRoute = (normalizedRoute.replace(/\/$/, '') || '/').replace(/[|\\{}()[\]^$+*?.-]/g, '\\$&');
+  const groups = {};
+  let groupIndex = 1;
+  const parameterizedRoute = escapedRoute.replace(/\/\\\[([^/]+?)\\\](?=\/|$)/g, (_, $1) => {
+    const isCatchAll = /^(\\\.){3}/.test($1);
+    groups[$1 // Un-escape key
+    .replace(/\\([|\\{}()[\]^$+*?.-])/g, '$1').replace(/^\.{3}/, '') // eslint-disable-next-line no-sequences
+    ] = {
+      pos: groupIndex++,
+      repeat: isCatchAll
+    };
+    return isCatchAll ? '/(.+?)' : '/([^/]+?)';
+  });
+  return {
+    re: new RegExp('^' + parameterizedRoute + '(?:/)?$', 'i'),
+    groups
+  };
+}
+
+exports.getRouteRegex = getRouteRegex;
+
+/***/ }),
+
+/***/ "./node_modules/next/dist/next-server/lib/utils.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/next/dist/next-server/lib/utils.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+const url_1 = __webpack_require__(/*! url */ "./node_modules/native-url/dist/index.js");
+/**
+ * Utils
+ */
+
+
+function execOnce(fn) {
+  let used = false;
+  let result = null;
+  return (...args) => {
+    if (!used) {
+      used = true;
+      result = fn.apply(this, args);
+    }
+
+    return result;
+  };
+}
+
+exports.execOnce = execOnce;
+
+function getLocationOrigin() {
+  const {
+    protocol,
+    hostname,
+    port
+  } = window.location;
+  return "".concat(protocol, "//").concat(hostname).concat(port ? ':' + port : '');
+}
+
+exports.getLocationOrigin = getLocationOrigin;
+
+function getURL() {
+  const {
+    href
+  } = window.location;
+  const origin = getLocationOrigin();
+  return href.substring(origin.length);
+}
+
+exports.getURL = getURL;
+
+function getDisplayName(Component) {
+  return typeof Component === 'string' ? Component : Component.displayName || Component.name || 'Unknown';
+}
+
+exports.getDisplayName = getDisplayName;
+
+function isResSent(res) {
+  return res.finished || res.headersSent;
+}
+
+exports.isResSent = isResSent;
+
+async function loadGetInitialProps(App, ctx) {
+  var _a;
+
+  if (true) {
+    if ((_a = App.prototype) === null || _a === void 0 ? void 0 : _a.getInitialProps) {
+      const message = "\"".concat(getDisplayName(App), ".getInitialProps()\" is defined as an instance method - visit https://err.sh/zeit/next.js/get-initial-props-as-an-instance-method for more information.");
+      throw new Error(message);
+    }
+  } // when called from _app `ctx` is nested in `ctx`
+
+
+  const res = ctx.res || ctx.ctx && ctx.ctx.res;
+
+  if (!App.getInitialProps) {
+    if (ctx.ctx && ctx.Component) {
+      // @ts-ignore pageProps default
+      return {
+        pageProps: await loadGetInitialProps(ctx.Component, ctx.ctx)
+      };
+    }
+
+    return {};
+  }
+
+  const props = await App.getInitialProps(ctx);
+
+  if (res && isResSent(res)) {
+    return props;
+  }
+
+  if (!props) {
+    const message = "\"".concat(getDisplayName(App), ".getInitialProps()\" should resolve to an object. But found \"").concat(props, "\" instead.");
+    throw new Error(message);
+  }
+
+  if (true) {
+    if (Object.keys(props).length === 0 && !ctx.ctx) {
+      console.warn("".concat(getDisplayName(App), " returned an empty object from `getInitialProps`. This de-optimizes and prevents automatic static optimization. https://err.sh/zeit/next.js/empty-object-getInitialProps"));
+    }
+  }
+
+  return props;
+}
+
+exports.loadGetInitialProps = loadGetInitialProps;
+exports.urlObjectKeys = ['auth', 'hash', 'host', 'hostname', 'href', 'path', 'pathname', 'port', 'protocol', 'query', 'search', 'slashes'];
+
+function formatWithValidation(url, options) {
+  if (true) {
+    if (url !== null && typeof url === 'object') {
+      Object.keys(url).forEach(key => {
+        if (exports.urlObjectKeys.indexOf(key) === -1) {
+          console.warn("Unknown key passed via urlObject into url.format: ".concat(key));
+        }
+      });
+    }
+  }
+
+  return url_1.format(url, options);
+}
+
+exports.formatWithValidation = formatWithValidation;
+exports.SP = typeof performance !== 'undefined';
+exports.ST = exports.SP && typeof performance.mark === 'function' && typeof performance.measure === 'function';
+
+/***/ }),
+
+/***/ "./node_modules/next/link.js":
+/*!***********************************!*\
+  !*** ./node_modules/next/link.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./dist/client/link */ "./node_modules/next/dist/client/link.js")
+
+
+/***/ }),
+
+/***/ "./node_modules/next/node_modules/@babel/runtime/helpers/interopRequireDefault.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/next/node_modules/@babel/runtime/helpers/interopRequireDefault.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : {
+    "default": obj
+  };
+}
+
+module.exports = _interopRequireDefault;
+
+/***/ }),
+
+/***/ "./node_modules/next/node_modules/@babel/runtime/helpers/interopRequireWildcard.js":
+/*!*****************************************************************************************!*\
+  !*** ./node_modules/next/node_modules/@babel/runtime/helpers/interopRequireWildcard.js ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _typeof = __webpack_require__(/*! ../helpers/typeof */ "./node_modules/next/node_modules/@babel/runtime/helpers/typeof.js");
+
+function _getRequireWildcardCache() {
+  if (typeof WeakMap !== "function") return null;
+  var cache = new WeakMap();
+
+  _getRequireWildcardCache = function _getRequireWildcardCache() {
+    return cache;
+  };
+
+  return cache;
+}
+
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  }
+
+  if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") {
+    return {
+      "default": obj
+    };
+  }
+
+  var cache = _getRequireWildcardCache();
+
+  if (cache && cache.has(obj)) {
+    return cache.get(obj);
+  }
+
+  var newObj = {};
+  var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor;
+
+  for (var key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null;
+
+      if (desc && (desc.get || desc.set)) {
+        Object.defineProperty(newObj, key, desc);
+      } else {
+        newObj[key] = obj[key];
+      }
+    }
+  }
+
+  newObj["default"] = obj;
+
+  if (cache) {
+    cache.set(obj, newObj);
+  }
+
+  return newObj;
+}
+
+module.exports = _interopRequireWildcard;
+
+/***/ }),
+
+/***/ "./node_modules/next/node_modules/@babel/runtime/helpers/typeof.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/next/node_modules/@babel/runtime/helpers/typeof.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _typeof2(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof2 = function _typeof2(obj) { return typeof obj; }; } else { _typeof2 = function _typeof2(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof2(obj); }
+
+function _typeof(obj) {
+  if (typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol") {
+    module.exports = _typeof = function _typeof(obj) {
+      return _typeof2(obj);
+    };
+  } else {
+    module.exports = _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
+    };
+  }
+
+  return _typeof(obj);
+}
+
+module.exports = _typeof;
+
+/***/ }),
+
+/***/ "./node_modules/next/node_modules/react-is/cjs/react-is.development.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/next/node_modules/react-is/cjs/react-is.development.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/** @license React v16.8.6
+ * react-is.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+
+
+if (true) {
+  (function() {
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+// The Symbol used to tag the ReactElement-like types. If there is no native Symbol
+// nor polyfill, then a plain number is used for performance.
+var hasSymbol = typeof Symbol === 'function' && Symbol.for;
+
+var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
+var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
+var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
+var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
+var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
+var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
+var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace;
+var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
+var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
+var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
+var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
+var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
+var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
+
+function isValidElementType(type) {
+  return typeof type === 'string' || typeof type === 'function' ||
+  // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
+  type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE);
+}
+
+/**
+ * Forked from fbjs/warning:
+ * https://github.com/facebook/fbjs/blob/e66ba20ad5be433eb54423f2b097d829324d9de6/packages/fbjs/src/__forks__/warning.js
+ *
+ * Only change is we use console.warn instead of console.error,
+ * and do nothing when 'console' is not supported.
+ * This really simplifies the code.
+ * ---
+ * Similar to invariant but only logs a warning if the condition is not met.
+ * This can be used to log issues in development environments in critical
+ * paths. Removing the logging code for production environments will keep the
+ * same logic and follow the same code paths.
+ */
+
+var lowPriorityWarning = function () {};
+
+{
+  var printWarning = function (format) {
+    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    var argIndex = 0;
+    var message = 'Warning: ' + format.replace(/%s/g, function () {
+      return args[argIndex++];
+    });
+    if (typeof console !== 'undefined') {
+      console.warn(message);
+    }
+    try {
+      // --- Welcome to debugging React ---
+      // This error was thrown as a convenience so that you can use this stack
+      // to find the callsite that caused this warning to fire.
+      throw new Error(message);
+    } catch (x) {}
+  };
+
+  lowPriorityWarning = function (condition, format) {
+    if (format === undefined) {
+      throw new Error('`lowPriorityWarning(condition, format, ...args)` requires a warning ' + 'message argument');
+    }
+    if (!condition) {
+      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+        args[_key2 - 2] = arguments[_key2];
+      }
+
+      printWarning.apply(undefined, [format].concat(args));
+    }
+  };
+}
+
+var lowPriorityWarning$1 = lowPriorityWarning;
+
+function typeOf(object) {
+  if (typeof object === 'object' && object !== null) {
+    var $$typeof = object.$$typeof;
+    switch ($$typeof) {
+      case REACT_ELEMENT_TYPE:
+        var type = object.type;
+
+        switch (type) {
+          case REACT_ASYNC_MODE_TYPE:
+          case REACT_CONCURRENT_MODE_TYPE:
+          case REACT_FRAGMENT_TYPE:
+          case REACT_PROFILER_TYPE:
+          case REACT_STRICT_MODE_TYPE:
+          case REACT_SUSPENSE_TYPE:
+            return type;
+          default:
+            var $$typeofType = type && type.$$typeof;
+
+            switch ($$typeofType) {
+              case REACT_CONTEXT_TYPE:
+              case REACT_FORWARD_REF_TYPE:
+              case REACT_PROVIDER_TYPE:
+                return $$typeofType;
+              default:
+                return $$typeof;
+            }
+        }
+      case REACT_LAZY_TYPE:
+      case REACT_MEMO_TYPE:
+      case REACT_PORTAL_TYPE:
+        return $$typeof;
+    }
+  }
+
+  return undefined;
+}
+
+// AsyncMode is deprecated along with isAsyncMode
+var AsyncMode = REACT_ASYNC_MODE_TYPE;
+var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+var ContextConsumer = REACT_CONTEXT_TYPE;
+var ContextProvider = REACT_PROVIDER_TYPE;
+var Element = REACT_ELEMENT_TYPE;
+var ForwardRef = REACT_FORWARD_REF_TYPE;
+var Fragment = REACT_FRAGMENT_TYPE;
+var Lazy = REACT_LAZY_TYPE;
+var Memo = REACT_MEMO_TYPE;
+var Portal = REACT_PORTAL_TYPE;
+var Profiler = REACT_PROFILER_TYPE;
+var StrictMode = REACT_STRICT_MODE_TYPE;
+var Suspense = REACT_SUSPENSE_TYPE;
+
+var hasWarnedAboutDeprecatedIsAsyncMode = false;
+
+// AsyncMode should be deprecated
+function isAsyncMode(object) {
+  {
+    if (!hasWarnedAboutDeprecatedIsAsyncMode) {
+      hasWarnedAboutDeprecatedIsAsyncMode = true;
+      lowPriorityWarning$1(false, 'The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
+    }
+  }
+  return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
+}
+function isConcurrentMode(object) {
+  return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
+}
+function isContextConsumer(object) {
+  return typeOf(object) === REACT_CONTEXT_TYPE;
+}
+function isContextProvider(object) {
+  return typeOf(object) === REACT_PROVIDER_TYPE;
+}
+function isElement(object) {
+  return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+}
+function isForwardRef(object) {
+  return typeOf(object) === REACT_FORWARD_REF_TYPE;
+}
+function isFragment(object) {
+  return typeOf(object) === REACT_FRAGMENT_TYPE;
+}
+function isLazy(object) {
+  return typeOf(object) === REACT_LAZY_TYPE;
+}
+function isMemo(object) {
+  return typeOf(object) === REACT_MEMO_TYPE;
+}
+function isPortal(object) {
+  return typeOf(object) === REACT_PORTAL_TYPE;
+}
+function isProfiler(object) {
+  return typeOf(object) === REACT_PROFILER_TYPE;
+}
+function isStrictMode(object) {
+  return typeOf(object) === REACT_STRICT_MODE_TYPE;
+}
+function isSuspense(object) {
+  return typeOf(object) === REACT_SUSPENSE_TYPE;
+}
+
+exports.typeOf = typeOf;
+exports.AsyncMode = AsyncMode;
+exports.ConcurrentMode = ConcurrentMode;
+exports.ContextConsumer = ContextConsumer;
+exports.ContextProvider = ContextProvider;
+exports.Element = Element;
+exports.ForwardRef = ForwardRef;
+exports.Fragment = Fragment;
+exports.Lazy = Lazy;
+exports.Memo = Memo;
+exports.Portal = Portal;
+exports.Profiler = Profiler;
+exports.StrictMode = StrictMode;
+exports.Suspense = Suspense;
+exports.isValidElementType = isValidElementType;
+exports.isAsyncMode = isAsyncMode;
+exports.isConcurrentMode = isConcurrentMode;
+exports.isContextConsumer = isContextConsumer;
+exports.isContextProvider = isContextProvider;
+exports.isElement = isElement;
+exports.isForwardRef = isForwardRef;
+exports.isFragment = isFragment;
+exports.isLazy = isLazy;
+exports.isMemo = isMemo;
+exports.isPortal = isPortal;
+exports.isProfiler = isProfiler;
+exports.isStrictMode = isStrictMode;
+exports.isSuspense = isSuspense;
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/next/node_modules/react-is/index.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/next/node_modules/react-is/index.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+if (false) {} else {
+  module.exports = __webpack_require__(/*! ./cjs/react-is.development.js */ "./node_modules/next/node_modules/react-is/cjs/react-is.development.js");
+}
+
 
 /***/ }),
 
@@ -269,6 +2333,95 @@ module.exports = function(originalModule) {
 	return module;
 };
 
+
+/***/ }),
+
+/***/ "./node_modules/prop-types-exact/build/helpers/isPlainObject.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/prop-types-exact/build/helpers/isPlainObject.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+exports['default'] = isPlainObject;
+function isPlainObject(x) {
+  return x && (typeof x === 'undefined' ? 'undefined' : _typeof(x)) === 'object' && !Array.isArray(x);
+}
+module.exports = exports['default'];
+//# sourceMappingURL=isPlainObject.js.map
+
+/***/ }),
+
+/***/ "./node_modules/prop-types-exact/build/index.js":
+/*!******************************************************!*\
+  !*** ./node_modules/prop-types-exact/build/index.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports['default'] = forbidExtraProps;
+
+var _object = __webpack_require__(/*! object.assign */ "./node_modules/next/dist/build/polyfills/object.assign/index.js");
+
+var _object2 = _interopRequireDefault(_object);
+
+var _has = __webpack_require__(/*! has */ "./node_modules/has/src/index.js");
+
+var _has2 = _interopRequireDefault(_has);
+
+var _isPlainObject = __webpack_require__(/*! ./helpers/isPlainObject */ "./node_modules/prop-types-exact/build/helpers/isPlainObject.js");
+
+var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var zeroWidthSpace = '\u200B';
+var specialProperty = 'prop-types-exact: ' + zeroWidthSpace;
+var semaphore = typeof Symbol === 'function' && typeof Symbol['for'] === 'function' ? Symbol['for'](specialProperty) : /* istanbul ignore next */specialProperty;
+
+function brand(fn) {
+  return (0, _object2['default'])(fn, _defineProperty({}, specialProperty, semaphore));
+}
+
+function isBranded(value) {
+  return value && value[specialProperty] === semaphore;
+}
+
+function forbidExtraProps(propTypes) {
+  if (!(0, _isPlainObject2['default'])(propTypes)) {
+    throw new TypeError('given propTypes must be an object');
+  }
+  if ((0, _has2['default'])(propTypes, specialProperty) && !isBranded(propTypes[specialProperty])) {
+    throw new TypeError('Against all odds, you created a propType for a prop that uses both the zero-width space and our custom string - which, sadly, conflicts with `prop-types-exact`');
+  }
+
+  return (0, _object2['default'])({}, propTypes, _defineProperty({}, specialProperty, brand(function () {
+    function forbidUnknownProps(props, _, componentName) {
+      var unknownProps = Object.keys(props).filter(function (prop) {
+        return !(0, _has2['default'])(propTypes, prop);
+      });
+      if (unknownProps.length > 0) {
+        return new TypeError(String(componentName) + ': unknown props found: ' + String(unknownProps.join(', ')));
+      }
+      return null;
+    }
+
+    return forbidUnknownProps;
+  }())));
+}
+module.exports = exports['default'];
+//# sourceMappingURL=index.js.map
 
 /***/ }),
 
@@ -923,6 +3076,215 @@ module.exports = (__webpack_require__(/*! dll-reference dll_0fb095e325d7ebf261c3
 
 /***/ }),
 
+/***/ "./node_modules/querystring-es3/decode.js":
+/*!************************************************!*\
+  !*** ./node_modules/querystring-es3/decode.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+// If obj.hasOwnProperty has been overridden, then calling
+// obj.hasOwnProperty(prop) will break.
+// See: https://github.com/joyent/node/issues/1707
+function hasOwnProperty(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+module.exports = function(qs, sep, eq, options) {
+  sep = sep || '&';
+  eq = eq || '=';
+  var obj = {};
+
+  if (typeof qs !== 'string' || qs.length === 0) {
+    return obj;
+  }
+
+  var regexp = /\+/g;
+  qs = qs.split(sep);
+
+  var maxKeys = 1000;
+  if (options && typeof options.maxKeys === 'number') {
+    maxKeys = options.maxKeys;
+  }
+
+  var len = qs.length;
+  // maxKeys <= 0 means that we should not limit keys count
+  if (maxKeys > 0 && len > maxKeys) {
+    len = maxKeys;
+  }
+
+  for (var i = 0; i < len; ++i) {
+    var x = qs[i].replace(regexp, '%20'),
+        idx = x.indexOf(eq),
+        kstr, vstr, k, v;
+
+    if (idx >= 0) {
+      kstr = x.substr(0, idx);
+      vstr = x.substr(idx + 1);
+    } else {
+      kstr = x;
+      vstr = '';
+    }
+
+    k = decodeURIComponent(kstr);
+    v = decodeURIComponent(vstr);
+
+    if (!hasOwnProperty(obj, k)) {
+      obj[k] = v;
+    } else if (isArray(obj[k])) {
+      obj[k].push(v);
+    } else {
+      obj[k] = [obj[k], v];
+    }
+  }
+
+  return obj;
+};
+
+var isArray = Array.isArray || function (xs) {
+  return Object.prototype.toString.call(xs) === '[object Array]';
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/querystring-es3/encode.js":
+/*!************************************************!*\
+  !*** ./node_modules/querystring-es3/encode.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+var stringifyPrimitive = function(v) {
+  switch (typeof v) {
+    case 'string':
+      return v;
+
+    case 'boolean':
+      return v ? 'true' : 'false';
+
+    case 'number':
+      return isFinite(v) ? v : '';
+
+    default:
+      return '';
+  }
+};
+
+module.exports = function(obj, sep, eq, name) {
+  sep = sep || '&';
+  eq = eq || '=';
+  if (obj === null) {
+    obj = undefined;
+  }
+
+  if (typeof obj === 'object') {
+    return map(objectKeys(obj), function(k) {
+      var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
+      if (isArray(obj[k])) {
+        return map(obj[k], function(v) {
+          return ks + encodeURIComponent(stringifyPrimitive(v));
+        }).join(sep);
+      } else {
+        return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
+      }
+    }).join(sep);
+
+  }
+
+  if (!name) return '';
+  return encodeURIComponent(stringifyPrimitive(name)) + eq +
+         encodeURIComponent(stringifyPrimitive(obj));
+};
+
+var isArray = Array.isArray || function (xs) {
+  return Object.prototype.toString.call(xs) === '[object Array]';
+};
+
+function map (xs, f) {
+  if (xs.map) return xs.map(f);
+  var res = [];
+  for (var i = 0; i < xs.length; i++) {
+    res.push(f(xs[i], i));
+  }
+  return res;
+}
+
+var objectKeys = Object.keys || function (obj) {
+  var res = [];
+  for (var key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) res.push(key);
+  }
+  return res;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/querystring-es3/index.js":
+/*!***********************************************!*\
+  !*** ./node_modules/querystring-es3/index.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.decode = exports.parse = __webpack_require__(/*! ./decode */ "./node_modules/querystring-es3/decode.js");
+exports.encode = exports.stringify = __webpack_require__(/*! ./encode */ "./node_modules/querystring-es3/encode.js");
+
+
+/***/ }),
+
 /***/ "./node_modules/react-dom/index.js":
 /*!***********************************************************************************************!*\
   !*** delegated ./node_modules/react-dom/index.js from dll-reference dll_0fb095e325d7ebf261c3 ***!
@@ -931,6 +3293,1469 @@ module.exports = (__webpack_require__(/*! dll-reference dll_0fb095e325d7ebf261c3
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(/*! dll-reference dll_0fb095e325d7ebf261c3 */ "dll-reference dll_0fb095e325d7ebf261c3"))("./node_modules/react-dom/index.js");
+
+/***/ }),
+
+/***/ "./node_modules/react-flip-move/dist/react-flip-move.es.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/react-flip-move/dist/react-flip-move.es.js ***!
+  \*****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+function warnOnce(msg) {
+  var hasWarned = false;
+  return function () {
+    if (!hasWarned) {
+      console.warn(msg);
+      hasWarned = true;
+    }
+  };
+}
+
+
+var statelessFunctionalComponentSupplied = warnOnce('\n>> Error, via react-flip-move <<\n\nYou provided a stateless functional component as a child to <FlipMove>. Unfortunately, SFCs aren\'t supported, because Flip Move needs access to the backing instances via refs, and SFCs don\'t have a public instance that holds that info.\n\nPlease wrap your components in a native element (eg. <div>), or a non-functional component.\n');
+
+var primitiveNodeSupplied = warnOnce('\n>> Error, via react-flip-move <<\n\nYou provided a primitive (text or number) node as a child to <FlipMove>. Flip Move needs containers with unique keys to move children around.\n\nPlease wrap your value in a native element (eg. <span>), or a component.\n');
+
+var invalidTypeForTimingProp = function invalidTypeForTimingProp(args
+// prettier-ignore
+) {
+  return console.error('\n>> Error, via react-flip-move <<\n\nThe prop you provided for \'' + args.prop + '\' is invalid. It needs to be a positive integer, or a string that can be resolved to a number. The value you provided is \'' + args.value + '\'.\n\nAs a result,  the default value for this parameter will be used, which is \'' + args.defaultValue + '\'.\n');
+};
+
+var invalidEnterLeavePreset = function invalidEnterLeavePreset(args
+// prettier-ignore
+) {
+  return console.error('\n>> Error, via react-flip-move <<\n\nThe enter/leave preset you provided is invalid. We don\'t currently have a \'' + args.value + ' preset.\'\n\nAcceptable values are ' + args.acceptableValues + '. The default value of \'' + args.defaultValue + '\' will be used.\n');
+};
+
+var parentNodePositionStatic = warnOnce('\n>> Warning, via react-flip-move <<\n\nWhen using "wrapperless" mode (by supplying \'typeName\' of \'null\'), strange things happen when the direct parent has the default "static" position.\n\nFlipMove has added \'position: relative\' to this node, to ensure Flip Move animates correctly.\n\nTo avoid seeing this warning, simply apply a non-static position to that parent node.\n');
+
+var childIsDisabled = warnOnce('\n>> Warning, via react-flip-move <<\n\nOne or more of Flip Move\'s child elements have the html attribute \'disabled\' set to true.\n\nPlease note that this will cause animations to break in Internet Explorer 11 and below. Either remove the disabled attribute or set \'animation\' to false.\n');
+
+var enterPresets = {
+  elevator: {
+    from: { transform: 'scale(0)', opacity: '0' },
+    to: { transform: '', opacity: '' }
+  },
+  fade: {
+    from: { opacity: '0' },
+    to: { opacity: '' }
+  },
+  accordionVertical: {
+    from: { transform: 'scaleY(0)', transformOrigin: 'center top' },
+    to: { transform: '', transformOrigin: 'center top' }
+  },
+  accordionHorizontal: {
+    from: { transform: 'scaleX(0)', transformOrigin: 'left center' },
+    to: { transform: '', transformOrigin: 'left center' }
+  },
+  none: null
+};
+/**
+ * React Flip Move | enterLeavePresets
+ * (c) 2016-present Joshua Comeau
+ *
+ * This contains the master list of presets available for enter/leave animations,
+ * along with the mapping between preset and styles.
+ */
+
+
+var leavePresets = {
+  elevator: {
+    from: { transform: 'scale(1)', opacity: '1' },
+    to: { transform: 'scale(0)', opacity: '0' }
+  },
+  fade: {
+    from: { opacity: '1' },
+    to: { opacity: '0' }
+  },
+  accordionVertical: {
+    from: { transform: 'scaleY(1)', transformOrigin: 'center top' },
+    to: { transform: 'scaleY(0)', transformOrigin: 'center top' }
+  },
+  accordionHorizontal: {
+    from: { transform: 'scaleX(1)', transformOrigin: 'left center' },
+    to: { transform: 'scaleX(0)', transformOrigin: 'left center' }
+  },
+  none: null
+};
+
+// For now, appearPresets will be identical to enterPresets.
+// Assigning a custom export in case we ever want to add appear-specific ones.
+var appearPresets = enterPresets;
+
+var defaultPreset = 'elevator';
+var disablePreset = 'none';
+
+var find = function find(predicate, arr) {
+  for (var i = 0; i < arr.length; i++) {
+    if (predicate(arr[i], i, arr)) {
+      return arr[i];
+    }
+  }
+
+  return undefined;
+};
+
+
+var every = function every(predicate, arr) {
+  for (var i = 0; i < arr.length; i++) {
+    if (!predicate(arr[i], i, arr)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+// eslint-disable-next-line import/no-mutable-exports
+var _isArray = function isArray(arr) {
+  _isArray = Array.isArray || function (arg) {
+    return Object.prototype.toString.call(arg) === '[object Array]';
+  };
+  return _isArray(arr);
+};
+
+var isElementAnSFC = function isElementAnSFC(element) {
+  var isNativeDOMElement = typeof element.type === 'string';
+
+  if (isNativeDOMElement) {
+    return false;
+  }
+
+  return typeof element.type === 'function' && !element.type.prototype.isReactComponent;
+};
+
+function omit(obj) {
+  var attrs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+  var result = {};
+  Object.keys(obj).forEach(function (key) {
+    if (attrs.indexOf(key) === -1) {
+      result[key] = obj[key];
+    }
+  });
+  return result;
+}
+
+function arraysEqual(a, b) {
+  var sameObject = a === b;
+  if (sameObject) {
+    return true;
+  }
+
+  var notBothArrays = !_isArray(a) || !_isArray(b);
+  var differentLengths = a.length !== b.length;
+
+  if (notBothArrays || differentLengths) {
+    return false;
+  }
+
+  return every(function (element, index) {
+    return element === b[index];
+  }, a);
+}
+
+function memoizeString(fn) {
+  var cache = {};
+
+  return function (str) {
+    if (!cache[str]) {
+      cache[str] = fn(str);
+    }
+    return cache[str];
+  };
+}
+
+var hyphenate = memoizeString(function (str) {
+  return str.replace(/([A-Z])/g, '-$1').toLowerCase();
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+
+
+
+
+
+
+
+
+
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+
+
+
+
+
+
+
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+
+
+var inherits = function (subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+};
+
+
+
+
+
+
+
+
+
+
+
+var possibleConstructorReturn = function (self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
+};
+
+/**
+ * React Flip Move | propConverter
+ * (c) 2016-present Joshua Comeau
+ *
+ * Abstracted away a bunch of the messy business with props.
+ *   - props flow types and defaultProps
+ *   - Type conversion (We accept 'string' and 'number' values for duration,
+ *     delay, and other fields, but we actually need them to be ints.)
+ *   - Children conversion (we need the children to be an array. May not always
+ *     be, if a single child is passed in.)
+ *   - Resolving animation presets into their base CSS styles
+ */
+/* eslint-disable block-scoped-var */
+
+// eslint-disable-next-line no-duplicate-imports
+
+
+function propConverter(ComposedComponent) {
+  var _class, _temp;
+
+  return _temp = _class = function (_Component) {
+    inherits(FlipMovePropConverter, _Component);
+
+    function FlipMovePropConverter() {
+      classCallCheck(this, FlipMovePropConverter);
+      return possibleConstructorReturn(this, _Component.apply(this, arguments));
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    FlipMovePropConverter.prototype.checkChildren = function checkChildren(children) {
+      // Skip all console warnings in production.
+      // Bail early, to avoid unnecessary work.
+      if (false) {}
+
+      // same as React.Node, but without fragments, see https://github.com/facebook/flow/issues/4781
+
+
+      // FlipMove does not support stateless functional components.
+      // Check to see if any supplied components won't work.
+      // If the child doesn't have a key, it means we aren't animating it.
+      // It's allowed to be an SFC, since we ignore it.
+      react__WEBPACK_IMPORTED_MODULE_0__["Children"].forEach(children, function (child) {
+        // null, undefined, and booleans will be filtered out by Children.toArray
+        if (child == null || typeof child === 'boolean') {
+          return;
+        }
+
+        if ((typeof child === 'undefined' ? 'undefined' : _typeof(child)) !== 'object') {
+          primitiveNodeSupplied();
+          return;
+        }
+
+        if (isElementAnSFC(child) && child.key != null) {
+          statelessFunctionalComponentSupplied();
+        }
+      });
+    };
+
+    FlipMovePropConverter.prototype.convertProps = function convertProps(props) {
+      var workingProps = {
+        // explicitly bypass the props that don't need conversion
+        children: props.children,
+        easing: props.easing,
+        onStart: props.onStart,
+        onFinish: props.onFinish,
+        onStartAll: props.onStartAll,
+        onFinishAll: props.onFinishAll,
+        typeName: props.typeName,
+        disableAllAnimations: props.disableAllAnimations,
+        getPosition: props.getPosition,
+        maintainContainerHeight: props.maintainContainerHeight,
+        verticalAlignment: props.verticalAlignment,
+
+        // Do string-to-int conversion for all timing-related props
+        duration: this.convertTimingProp('duration'),
+        delay: this.convertTimingProp('delay'),
+        staggerDurationBy: this.convertTimingProp('staggerDurationBy'),
+        staggerDelayBy: this.convertTimingProp('staggerDelayBy'),
+
+        // Our enter/leave animations can be specified as boolean (default or
+        // disabled), string (preset name), or object (actual animation values).
+        // Let's standardize this so that they're always objects
+        appearAnimation: this.convertAnimationProp(props.appearAnimation, appearPresets),
+        enterAnimation: this.convertAnimationProp(props.enterAnimation, enterPresets),
+        leaveAnimation: this.convertAnimationProp(props.leaveAnimation, leavePresets),
+
+        delegated: {}
+      };
+
+      this.checkChildren(workingProps.children);
+
+      // Gather any additional props;
+      // they will be delegated to the ReactElement created.
+      var primaryPropKeys = Object.keys(workingProps);
+      var delegatedProps = omit(this.props, primaryPropKeys);
+
+      // The FlipMove container element needs to have a non-static position.
+      // We use `relative` by default, but it can be overridden by the user.
+      // Now that we're delegating props, we need to merge this in.
+      delegatedProps.style = _extends({
+        position: 'relative'
+      }, delegatedProps.style);
+
+      workingProps.delegated = delegatedProps;
+
+      return workingProps;
+    };
+
+    FlipMovePropConverter.prototype.convertTimingProp = function convertTimingProp(prop) {
+      var rawValue = this.props[prop];
+
+      var value = typeof rawValue === 'number' ? rawValue : parseInt(rawValue, 10);
+
+      if (isNaN(value)) {
+        var defaultValue = FlipMovePropConverter.defaultProps[prop];
+
+        if (true) {
+          invalidTypeForTimingProp({
+            prop: prop,
+            value: rawValue,
+            defaultValue: defaultValue
+          });
+        }
+
+        return defaultValue;
+      }
+
+      return value;
+    };
+
+    // eslint-disable-next-line class-methods-use-this
+
+
+    FlipMovePropConverter.prototype.convertAnimationProp = function convertAnimationProp(animation, presets) {
+      switch (typeof animation === 'undefined' ? 'undefined' : _typeof(animation)) {
+        case 'boolean':
+          {
+            // If it's true, we want to use the default preset.
+            // If it's false, we want to use the 'none' preset.
+            return presets[animation ? defaultPreset : disablePreset];
+          }
+
+        case 'string':
+          {
+            var presetKeys = Object.keys(presets);
+
+            if (presetKeys.indexOf(animation) === -1) {
+              if (true) {
+                invalidEnterLeavePreset({
+                  value: animation,
+                  acceptableValues: presetKeys.join(', '),
+                  defaultValue: defaultPreset
+                });
+              }
+
+              return presets[defaultPreset];
+            }
+
+            return presets[animation];
+          }
+
+        default:
+          {
+            return animation;
+          }
+      }
+    };
+
+    FlipMovePropConverter.prototype.render = function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ComposedComponent, this.convertProps(this.props));
+    };
+
+    return FlipMovePropConverter;
+  }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]), _class.defaultProps = {
+    easing: 'ease-in-out',
+    duration: 350,
+    delay: 0,
+    staggerDurationBy: 0,
+    staggerDelayBy: 0,
+    typeName: 'div',
+    enterAnimation: defaultPreset,
+    leaveAnimation: defaultPreset,
+    disableAllAnimations: false,
+    getPosition: function getPosition(node) {
+      return node.getBoundingClientRect();
+    },
+    maintainContainerHeight: false,
+    verticalAlignment: 'top'
+  }, _temp;
+}
+
+/**
+ * React Flip Move
+ * (c) 2016-present Joshua Comeau
+ *
+ * These methods read from and write to the DOM.
+ * They almost always have side effects, and will hopefully become the
+ * only spot in the codebase with impure functions.
+ */
+function applyStylesToDOMNode(_ref) {
+  var domNode = _ref.domNode,
+      styles = _ref.styles;
+
+  // Can't just do an object merge because domNode.styles is no regular object.
+  // Need to do it this way for the engine to fire its `set` listeners.
+  Object.keys(styles).forEach(function (key) {
+    domNode.style.setProperty(hyphenate(key), styles[key]);
+  });
+}
+
+// Modified from Modernizr
+function whichTransitionEvent() {
+  var transitions = {
+    transition: 'transitionend',
+    '-o-transition': 'oTransitionEnd',
+    '-moz-transition': 'transitionend',
+    '-webkit-transition': 'webkitTransitionEnd'
+  };
+
+  // If we're running in a browserless environment (eg. SSR), it doesn't apply.
+  // Return a placeholder string, for consistent type return.
+  if (typeof document === 'undefined') return '';
+
+  var el = document.createElement('fakeelement');
+
+  var match = find(function (t) {
+    return el.style.getPropertyValue(t) !== undefined;
+  }, Object.keys(transitions));
+
+  // If no `transition` is found, we must be running in a browser so ancient,
+  // React itself won't run. Return an empty string, for consistent type return
+  return match ? transitions[match] : '';
+}
+
+var getRelativeBoundingBox = function getRelativeBoundingBox(_ref2) {
+  var childDomNode = _ref2.childDomNode,
+      parentDomNode = _ref2.parentDomNode,
+      getPosition = _ref2.getPosition;
+
+  var parentBox = getPosition(parentDomNode);
+
+  var _getPosition = getPosition(childDomNode),
+      top = _getPosition.top,
+      left = _getPosition.left,
+      right = _getPosition.right,
+      bottom = _getPosition.bottom,
+      width = _getPosition.width,
+      height = _getPosition.height;
+
+  return {
+    top: top - parentBox.top,
+    left: left - parentBox.left,
+    right: parentBox.right - right,
+    bottom: parentBox.bottom - bottom,
+    width: width,
+    height: height
+  };
+};
+
+/** getPositionDelta
+ * This method returns the delta between two bounding boxes, to figure out
+ * how many pixels on each axis the element has moved.
+ *
+ */
+var getPositionDelta = function getPositionDelta(_ref3) {
+  var childDomNode = _ref3.childDomNode,
+      childBoundingBox = _ref3.childBoundingBox,
+      parentBoundingBox = _ref3.parentBoundingBox,
+      getPosition = _ref3.getPosition;
+
+  // TEMP: A mystery bug is sometimes causing unnecessary boundingBoxes to
+  var defaultBox = {
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 0,
+    width: 0
+  };
+
+  // Our old box is its last calculated position, derived on mount or at the
+  // start of the previous animation.
+  var oldRelativeBox = childBoundingBox || defaultBox;
+  var parentBox = parentBoundingBox || defaultBox;
+
+  // Our new box is the new final resting place: Where we expect it to wind up
+  // after the animation. First we get the box in absolute terms (AKA relative
+  // to the viewport), and then we calculate its relative box (relative to the
+  // parent container)
+  var newAbsoluteBox = getPosition(childDomNode);
+  var newRelativeBox = {
+    top: newAbsoluteBox.top - parentBox.top,
+    left: newAbsoluteBox.left - parentBox.left
+  };
+
+  return [oldRelativeBox.left - newRelativeBox.left, oldRelativeBox.top - newRelativeBox.top];
+};
+
+/** removeNodeFromDOMFlow
+ * This method does something very sneaky: it removes a DOM node from the
+ * document flow, but without actually changing its on-screen position.
+ *
+ * It works by calculating where the node is, and then applying styles
+ * so that it winds up being positioned absolutely, but in exactly the
+ * same place.
+ *
+ * This is a vital part of the FLIP technique.
+ */
+var removeNodeFromDOMFlow = function removeNodeFromDOMFlow(childData, verticalAlignment) {
+  var domNode = childData.domNode,
+      boundingBox = childData.boundingBox;
+
+
+  if (!domNode || !boundingBox) {
+    return;
+  }
+
+  // For this to work, we have to offset any given `margin`.
+  var computed = window.getComputedStyle(domNode);
+
+  // We need to clean up margins, by converting and removing suffix:
+  // eg. '21px' -> 21
+  var marginAttrs = ['margin-top', 'margin-left', 'margin-right'];
+  var margins = marginAttrs.reduce(function (acc, margin) {
+    var _babelHelpers$extends;
+
+    var propertyVal = computed.getPropertyValue(margin);
+
+    return _extends({}, acc, (_babelHelpers$extends = {}, _babelHelpers$extends[margin] = Number(propertyVal.replace('px', '')), _babelHelpers$extends));
+  }, {});
+
+  // If we're bottom-aligned, we need to add the height of the child to its
+  // top offset. This is because, when the container is bottom-aligned, its
+  // height shrinks from the top, not the bottom. We're removing this node
+  // from the flow, so the top is going to drop by its height.
+  var topOffset = verticalAlignment === 'bottom' ? boundingBox.top - boundingBox.height : boundingBox.top;
+
+  var styles = {
+    position: 'absolute',
+    top: topOffset - margins['margin-top'] + 'px',
+    left: boundingBox.left - margins['margin-left'] + 'px',
+    right: boundingBox.right - margins['margin-right'] + 'px'
+  };
+
+  applyStylesToDOMNode({ domNode: domNode, styles: styles });
+};
+
+/** updateHeightPlaceholder
+ * An optional property to FlipMove is a `maintainContainerHeight` boolean.
+ * This property creates a node that fills space, so that the parent
+ * container doesn't collapse when its children are removed from the
+ * document flow.
+ */
+var updateHeightPlaceholder = function updateHeightPlaceholder(_ref4) {
+  var domNode = _ref4.domNode,
+      parentData = _ref4.parentData,
+      getPosition = _ref4.getPosition;
+
+  var parentDomNode = parentData.domNode;
+  var parentBoundingBox = parentData.boundingBox;
+
+  if (!parentDomNode || !parentBoundingBox) {
+    return;
+  }
+
+  // We need to find the height of the container *without* the placeholder.
+  // Since it's possible that the placeholder might already be present,
+  // we first set its height to 0.
+  // This allows the container to collapse down to the size of just its
+  // content (plus container padding or borders if any).
+  applyStylesToDOMNode({ domNode: domNode, styles: { height: '0' } });
+
+  // Find the distance by which the container would be collapsed by elements
+  // leaving. We compare the freshly-available parent height with the original,
+  // cached container height.
+  var originalParentHeight = parentBoundingBox.height;
+  var collapsedParentHeight = getPosition(parentDomNode).height;
+  var reductionInHeight = originalParentHeight - collapsedParentHeight;
+
+  // If the container has become shorter, update the padding element's
+  // height to take up the difference. Otherwise set its height to zero,
+  // so that it has no effect.
+  var styles = {
+    height: reductionInHeight > 0 ? reductionInHeight + 'px' : '0'
+  };
+
+  applyStylesToDOMNode({ domNode: domNode, styles: styles });
+};
+
+var getNativeNode = function getNativeNode(element) {
+  // When running in a windowless environment, abort!
+  if (typeof HTMLElement === 'undefined') {
+    return null;
+  }
+
+  // `element` may already be a native node.
+  if (element instanceof HTMLElement) {
+    return element;
+  }
+
+  // While ReactDOM's `findDOMNode` is discouraged, it's the only
+  // publicly-exposed way to find the underlying DOM node for
+  // composite components.
+  var foundNode = Object(react_dom__WEBPACK_IMPORTED_MODULE_1__["findDOMNode"])(element);
+
+  if (foundNode && foundNode.nodeType === Node.TEXT_NODE) {
+    // Text nodes are not supported
+    return null;
+  }
+  // eslint-disable-next-line flowtype/no-weak-types
+  return foundNode;
+};
+
+var createTransitionString = function createTransitionString(index, props) {
+  var delay = props.delay,
+      duration = props.duration;
+  var staggerDurationBy = props.staggerDurationBy,
+      staggerDelayBy = props.staggerDelayBy,
+      easing = props.easing;
+
+
+  delay += index * staggerDelayBy;
+  duration += index * staggerDurationBy;
+
+  var cssProperties = ['transform', 'opacity'];
+
+  return cssProperties.map(function (prop) {
+    return prop + ' ' + duration + 'ms ' + easing + ' ' + delay + 'ms';
+  }).join(', ');
+};
+
+/**
+ * React Flip Move
+ * (c) 2016-present Joshua Comeau
+ *
+ * For information on how this code is laid out, check out CODE_TOUR.md
+ */
+
+/* eslint-disable react/prop-types */
+
+// eslint-disable-next-line no-duplicate-imports
+
+
+var transitionEnd = whichTransitionEvent();
+var noBrowserSupport = !transitionEnd;
+
+function getKey(childData) {
+  return childData.key || '';
+}
+
+function getElementChildren(children) {
+  // Fix incomplete typing of Children.toArray
+  // eslint-disable-next-line flowtype/no-weak-types
+  return react__WEBPACK_IMPORTED_MODULE_0__["Children"].toArray(children);
+}
+
+var FlipMove$1 = function (_Component) {
+  inherits(FlipMove, _Component);
+
+  function FlipMove() {
+    var _temp, _this, _ret;
+
+    classCallCheck(this, FlipMove);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.state = {
+      children: getElementChildren(
+      // `this.props` ought to always be defined at this point, but a report
+      // was made about it not being defined in IE10.
+      // TODO: Test in IE10, to see if there's an underlying cause that can
+      // be addressed.
+      _this.props ? _this.props.children : []).map(function (element) {
+        return _extends({}, element, {
+          element: element,
+          appearing: true
+        });
+      })
+    }, _this.childrenData = {}, _this.parentData = {
+      domNode: null,
+      boundingBox: null
+    }, _this.heightPlaceholderData = {
+      domNode: null
+    }, _this.remainingAnimations = 0, _this.childrenToAnimate = [], _this.findDOMContainer = function () {
+      // eslint-disable-next-line react/no-find-dom-node
+      var domNode = react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.findDOMNode(_this);
+      var parentNode = domNode && domNode.parentNode;
+
+      // This ought to be impossible, but handling it for Flow's sake.
+      if (!parentNode || !(parentNode instanceof HTMLElement)) {
+        return;
+      }
+
+      // If the parent node has static positioning, leave animations might look
+      // really funky. Let's automatically apply `position: relative` in this
+      // case, to prevent any quirkiness.
+      if (window.getComputedStyle(parentNode).position === 'static') {
+        parentNode.style.position = 'relative';
+        parentNodePositionStatic();
+      }
+
+      _this.parentData.domNode = parentNode;
+    }, _this.runAnimation = function () {
+      var dynamicChildren = _this.state.children.filter(_this.doesChildNeedToBeAnimated);
+
+      // Splitting DOM reads and writes to be peformed in batches
+      var childrenInitialStyles = dynamicChildren.map(function (child) {
+        return _this.computeInitialStyles(child);
+      });
+      dynamicChildren.forEach(function (child, index) {
+        _this.remainingAnimations += 1;
+        _this.childrenToAnimate.push(getKey(child));
+        _this.animateChild(child, index, childrenInitialStyles[index]);
+      });
+
+      if (typeof _this.props.onStartAll === 'function') {
+        _this.callChildrenHook(_this.props.onStartAll);
+      }
+    }, _this.doesChildNeedToBeAnimated = function (child) {
+      // If the child doesn't have a key, it's an immovable child (one that we
+      // do not want to do FLIP stuff to.)
+      if (!getKey(child)) {
+        return false;
+      }
+
+      var childData = _this.getChildData(getKey(child));
+      var childDomNode = childData.domNode;
+      var childBoundingBox = childData.boundingBox;
+      var parentBoundingBox = _this.parentData.boundingBox;
+
+      if (!childDomNode) {
+        return false;
+      }
+
+      var _this$props = _this.props,
+          appearAnimation = _this$props.appearAnimation,
+          enterAnimation = _this$props.enterAnimation,
+          leaveAnimation = _this$props.leaveAnimation,
+          getPosition = _this$props.getPosition;
+
+
+      var isAppearingWithAnimation = child.appearing && appearAnimation;
+      var isEnteringWithAnimation = child.entering && enterAnimation;
+      var isLeavingWithAnimation = child.leaving && leaveAnimation;
+
+      if (isAppearingWithAnimation || isEnteringWithAnimation || isLeavingWithAnimation) {
+        return true;
+      }
+
+      // If it isn't entering/leaving, we want to animate it if it's
+      // on-screen position has changed.
+
+      var _getPositionDelta = getPositionDelta({
+        childDomNode: childDomNode,
+        childBoundingBox: childBoundingBox,
+        parentBoundingBox: parentBoundingBox,
+        getPosition: getPosition
+      }),
+          dX = _getPositionDelta[0],
+          dY = _getPositionDelta[1];
+
+      return dX !== 0 || dY !== 0;
+    }, _temp), possibleConstructorReturn(_this, _ret);
+  }
+  // Copy props.children into state.
+  // To understand why this is important (and not an anti-pattern), consider
+  // how "leave" animations work. An item has "left" when the component
+  // receives a new set of props that do NOT contain the item.
+  // If we just render the props as-is, the item would instantly disappear.
+  // We want to keep the item rendered for a little while, until its animation
+  // can complete. Because we cannot mutate props, we make `state` the source
+  // of truth.
+
+
+  // FlipMove needs to know quite a bit about its children in order to do
+  // its job. We store these as a property on the instance. We're not using
+  // state, because we don't want changes to trigger re-renders, we just
+  // need a place to keep the data for reference, when changes happen.
+  // This field should not be accessed directly. Instead, use getChildData,
+  // putChildData, etc...
+
+
+  // Similarly, track the dom node and box of our parent element.
+
+
+  // If `maintainContainerHeight` prop is set to true, we'll create a
+  // placeholder element which occupies space so that the parent height
+  // doesn't change when items are removed from the document flow (which
+  // happens during leave animations)
+
+
+  // Keep track of remaining animations so we know when to fire the
+  // all-finished callback, and clean up after ourselves.
+  // NOTE: we can't simply use childrenToAnimate.length to track remaining
+  // animations, because we need to maintain the list of animating children,
+  // to pass to the `onFinishAll` handler.
+
+
+  FlipMove.prototype.componentDidMount = function componentDidMount() {
+    // Because React 16 no longer requires wrapping elements, Flip Move can opt
+    // to not wrap the children in an element. In that case, find the parent
+    // element using `findDOMNode`.
+    if (this.props.typeName === null) {
+      this.findDOMContainer();
+    }
+
+    // Run our `appearAnimation` if it was requested, right after the
+    // component mounts.
+    var shouldTriggerFLIP = this.props.appearAnimation && !this.isAnimationDisabled(this.props);
+
+    if (shouldTriggerFLIP) {
+      this.prepForAnimation();
+      this.runAnimation();
+    }
+  };
+
+  FlipMove.prototype.componentDidUpdate = function componentDidUpdate(previousProps) {
+    if (this.props.typeName === null) {
+      this.findDOMContainer();
+    }
+    // If the children have been re-arranged, moved, or added/removed,
+    // trigger the main FLIP animation.
+    //
+    // IMPORTANT: We need to make sure that the children have actually changed.
+    // At the end of the transition, we clean up nodes that need to be removed.
+    // We DON'T want this cleanup to trigger another update.
+
+    var oldChildrenKeys = getElementChildren(this.props.children).map(function (d) {
+      return d.key;
+    });
+    var nextChildrenKeys = getElementChildren(previousProps.children).map(function (d) {
+      return d.key;
+    });
+
+    var shouldTriggerFLIP = !arraysEqual(oldChildrenKeys, nextChildrenKeys) && !this.isAnimationDisabled(this.props);
+
+    if (shouldTriggerFLIP) {
+      this.prepForAnimation();
+      this.runAnimation();
+    }
+  };
+
+  FlipMove.prototype.calculateNextSetOfChildren = function calculateNextSetOfChildren(nextChildren) {
+    var _this2 = this;
+
+    // We want to:
+    //   - Mark all new children as `entering`
+    //   - Pull in previous children that aren't in nextChildren, and mark them
+    //     as `leaving`
+    //   - Preserve the nextChildren list order, with leaving children in their
+    //     appropriate places.
+    //
+
+    var updatedChildren = nextChildren.map(function (nextChild) {
+      var child = _this2.findChildByKey(nextChild.key);
+
+      // If the current child did exist, but it was in the midst of leaving,
+      // we want to treat it as though it's entering
+      var isEntering = !child || child.leaving;
+
+      return _extends({}, nextChild, { element: nextChild, entering: isEntering });
+    });
+
+    // This is tricky. We want to keep the nextChildren's ordering, but with
+    // any just-removed items maintaining their original position.
+    // eg.
+    //   this.state.children  = [ 1, 2, 3, 4 ]
+    //   nextChildren         = [ 3, 1 ]
+    //
+    // In this example, we've removed the '2' & '4'
+    // We want to end up with:  [ 2, 3, 1, 4 ]
+    //
+    // To accomplish that, we'll iterate through this.state.children. whenever
+    // we find a match, we'll append our `leaving` flag to it, and insert it
+    // into the nextChildren in its ORIGINAL position. Note that, as we keep
+    // inserting old items into the new list, the "original" position will
+    // keep incrementing.
+    var numOfChildrenLeaving = 0;
+    this.state.children.forEach(function (child, index) {
+      var isLeaving = !find(function (_ref) {
+        var key = _ref.key;
+        return key === getKey(child);
+      }, nextChildren);
+
+      // If the child isn't leaving (or, if there is no leave animation),
+      // we don't need to add it into the state children.
+      if (!isLeaving || !_this2.props.leaveAnimation) return;
+
+      var nextChild = _extends({}, child, { leaving: true });
+      var nextChildIndex = index + numOfChildrenLeaving;
+
+      updatedChildren.splice(nextChildIndex, 0, nextChild);
+      numOfChildrenLeaving += 1;
+    });
+
+    return updatedChildren;
+  };
+
+  FlipMove.prototype.prepForAnimation = function prepForAnimation() {
+    var _this3 = this;
+
+    // Our animation prep consists of:
+    // - remove children that are leaving from the DOM flow, so that the new
+    //   layout can be accurately calculated,
+    // - update the placeholder container height, if needed, to ensure that
+    //   the parent's height doesn't collapse.
+
+    var _props = this.props,
+        leaveAnimation = _props.leaveAnimation,
+        maintainContainerHeight = _props.maintainContainerHeight,
+        getPosition = _props.getPosition;
+
+    // we need to make all leaving nodes "invisible" to the layout calculations
+    // that will take place in the next step (this.runAnimation).
+
+    if (leaveAnimation) {
+      var leavingChildren = this.state.children.filter(function (child) {
+        return child.leaving;
+      });
+
+      leavingChildren.forEach(function (leavingChild) {
+        var childData = _this3.getChildData(getKey(leavingChild));
+
+        // Warn if child is disabled
+        if (!_this3.isAnimationDisabled(_this3.props) && childData.domNode && childData.domNode.disabled) {
+          childIsDisabled();
+        }
+
+        // We need to take the items out of the "flow" of the document, so that
+        // its siblings can move to take its place.
+        if (childData.boundingBox) {
+          removeNodeFromDOMFlow(childData, _this3.props.verticalAlignment);
+        }
+      });
+
+      if (maintainContainerHeight && this.heightPlaceholderData.domNode) {
+        updateHeightPlaceholder({
+          domNode: this.heightPlaceholderData.domNode,
+          parentData: this.parentData,
+          getPosition: getPosition
+        });
+      }
+    }
+
+    // For all children not in the middle of entering or leaving,
+    // we need to reset the transition, so that the NEW shuffle starts from
+    // the right place.
+    this.state.children.forEach(function (child) {
+      var _getChildData = _this3.getChildData(getKey(child)),
+          domNode = _getChildData.domNode;
+
+      // Ignore children that don't render DOM nodes (eg. by returning null)
+
+
+      if (!domNode) {
+        return;
+      }
+
+      if (!child.entering && !child.leaving) {
+        applyStylesToDOMNode({
+          domNode: domNode,
+          styles: {
+            transition: ''
+          }
+        });
+      }
+    });
+  };
+
+  // eslint-disable-next-line camelcase
+
+
+  FlipMove.prototype.UNSAFE_componentWillReceiveProps = function UNSAFE_componentWillReceiveProps(nextProps) {
+    // When the component is handed new props, we need to figure out the
+    // "resting" position of all currently-rendered DOM nodes.
+    // We store that data in this.parent and this.children,
+    // so it can be used later to work out the animation.
+    this.updateBoundingBoxCaches();
+
+    // Convert opaque children object to array.
+    var nextChildren = getElementChildren(nextProps.children);
+
+    // Next, we need to update our state, so that it contains our new set of
+    // children. If animation is disabled or unsupported, this is easy;
+    // we just copy our props into state.
+    // Assuming that we can animate, though, we have to do some work.
+    // Essentially, we want to keep just-deleted nodes in the DOM for a bit
+    // longer, so that we can animate them away.
+    this.setState({
+      children: this.isAnimationDisabled(nextProps) ? nextChildren.map(function (element) {
+        return _extends({}, element, { element: element });
+      }) : this.calculateNextSetOfChildren(nextChildren)
+    });
+  };
+
+  FlipMove.prototype.animateChild = function animateChild(child, index, childInitialStyles) {
+    var _this4 = this;
+
+    var _getChildData2 = this.getChildData(getKey(child)),
+        domNode = _getChildData2.domNode;
+
+    if (!domNode) {
+      return;
+    }
+
+    // Apply the relevant style for this DOM node
+    // This is the offset from its actual DOM position.
+    // eg. if an item has been re-rendered 20px lower, we want to apply a
+    // style of 'transform: translate(-20px)', so that it appears to be where
+    // it started.
+    // In FLIP terminology, this is the 'Invert' stage.
+    applyStylesToDOMNode({
+      domNode: domNode,
+      styles: childInitialStyles
+    });
+
+    // Start by invoking the onStart callback for this child.
+    if (this.props.onStart) this.props.onStart(child, domNode);
+
+    // Next, animate the item from it's artificially-offset position to its
+    // new, natural position.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        // NOTE, RE: the double-requestAnimationFrame:
+        // Sadly, this is the most browser-compatible way to do this I've found.
+        // Essentially we need to set the initial styles outside of any request
+        // callbacks to avoid batching them. Then, a frame needs to pass with
+        // the styles above rendered. Then, on the second frame, we can apply
+        // our final styles to perform the animation.
+
+        // Our first order of business is to "undo" the styles applied in the
+        // previous frames, while also adding a `transition` property.
+        // This way, the item will smoothly transition from its old position
+        // to its new position.
+
+        // eslint-disable-next-line flowtype/require-variable-type
+        var styles = {
+          transition: createTransitionString(index, _this4.props),
+          transform: '',
+          opacity: ''
+        };
+
+        if (child.appearing && _this4.props.appearAnimation) {
+          styles = _extends({}, styles, _this4.props.appearAnimation.to);
+        } else if (child.entering && _this4.props.enterAnimation) {
+          styles = _extends({}, styles, _this4.props.enterAnimation.to);
+        } else if (child.leaving && _this4.props.leaveAnimation) {
+          styles = _extends({}, styles, _this4.props.leaveAnimation.to);
+        }
+
+        // In FLIP terminology, this is the 'Play' stage.
+        applyStylesToDOMNode({ domNode: domNode, styles: styles });
+      });
+    });
+
+    this.bindTransitionEndHandler(child);
+  };
+
+  FlipMove.prototype.bindTransitionEndHandler = function bindTransitionEndHandler(child) {
+    var _this5 = this;
+
+    var _getChildData3 = this.getChildData(getKey(child)),
+        domNode = _getChildData3.domNode;
+
+    if (!domNode) {
+      return;
+    }
+
+    // The onFinish callback needs to be bound to the transitionEnd event.
+    // We also need to unbind it when the transition completes, so this ugly
+    // inline function is required (we need it here so it closes over
+    // dependent variables `child` and `domNode`)
+    var transitionEndHandler = function transitionEndHandler(ev) {
+      // It's possible that this handler is fired not on our primary transition,
+      // but on a nested transition (eg. a hover effect). Ignore these cases.
+      if (ev.target !== domNode) return;
+
+      // Remove the 'transition' inline style we added. This is cleanup.
+      domNode.style.transition = '';
+
+      // Trigger any applicable onFinish/onFinishAll hooks
+      _this5.triggerFinishHooks(child, domNode);
+
+      domNode.removeEventListener(transitionEnd, transitionEndHandler);
+
+      if (child.leaving) {
+        _this5.removeChildData(getKey(child));
+      }
+    };
+
+    domNode.addEventListener(transitionEnd, transitionEndHandler);
+  };
+
+  FlipMove.prototype.triggerFinishHooks = function triggerFinishHooks(child, domNode) {
+    var _this6 = this;
+
+    if (this.props.onFinish) this.props.onFinish(child, domNode);
+
+    // Reduce the number of children we need to animate by 1,
+    // so that we can tell when all children have finished.
+    this.remainingAnimations -= 1;
+
+    if (this.remainingAnimations === 0) {
+      // Remove any items from the DOM that have left, and reset `entering`.
+      var nextChildren = this.state.children.filter(function (_ref2) {
+        var leaving = _ref2.leaving;
+        return !leaving;
+      }).map(function (item) {
+        return _extends({}, item, {
+          // fix for Flow
+          element: item.element,
+          appearing: false,
+          entering: false
+        });
+      });
+
+      this.setState({ children: nextChildren }, function () {
+        if (typeof _this6.props.onFinishAll === 'function') {
+          _this6.callChildrenHook(_this6.props.onFinishAll);
+        }
+
+        // Reset our variables for the next iteration
+        _this6.childrenToAnimate = [];
+      });
+
+      // If the placeholder was holding the container open while elements were
+      // leaving, we we can now set its height to zero.
+      if (this.heightPlaceholderData.domNode) {
+        this.heightPlaceholderData.domNode.style.height = '0';
+      }
+    }
+  };
+
+  FlipMove.prototype.callChildrenHook = function callChildrenHook(hook) {
+    var _this7 = this;
+
+    var elements = [];
+    var domNodes = [];
+
+    this.childrenToAnimate.forEach(function (childKey) {
+      // If this was an exit animation, the child may no longer exist.
+      // If so, skip it.
+      var child = _this7.findChildByKey(childKey);
+
+      if (!child) {
+        return;
+      }
+
+      elements.push(child);
+
+      if (_this7.hasChildData(childKey)) {
+        domNodes.push(_this7.getChildData(childKey).domNode);
+      }
+    });
+
+    hook(elements, domNodes);
+  };
+
+  FlipMove.prototype.updateBoundingBoxCaches = function updateBoundingBoxCaches() {
+    var _this8 = this;
+
+    // This is the ONLY place that parentData and childrenData's
+    // bounding boxes are updated. They will be calculated at other times
+    // to be compared to this value, but it's important that the cache is
+    // updated once per update.
+    var parentDomNode = this.parentData.domNode;
+
+    if (!parentDomNode) {
+      return;
+    }
+
+    this.parentData.boundingBox = this.props.getPosition(parentDomNode);
+
+    // Splitting DOM reads and writes to be peformed in batches
+    var childrenBoundingBoxes = [];
+
+    this.state.children.forEach(function (child) {
+      var childKey = getKey(child);
+
+      // It is possible that a child does not have a `key` property;
+      // Ignore these children, they don't need to be moved.
+      if (!childKey) {
+        childrenBoundingBoxes.push(null);
+        return;
+      }
+
+      // In very rare circumstances, for reasons unknown, the ref is never
+      // populated for certain children. In this case, avoid doing this update.
+      // see: https://github.com/joshwcomeau/react-flip-move/pull/91
+      if (!_this8.hasChildData(childKey)) {
+        childrenBoundingBoxes.push(null);
+        return;
+      }
+
+      var childData = _this8.getChildData(childKey);
+
+      // If the child element returns null, we need to avoid trying to
+      // account for it
+      if (!childData.domNode || !child) {
+        childrenBoundingBoxes.push(null);
+        return;
+      }
+
+      childrenBoundingBoxes.push(getRelativeBoundingBox({
+        childDomNode: childData.domNode,
+        parentDomNode: parentDomNode,
+        getPosition: _this8.props.getPosition
+      }));
+    });
+
+    this.state.children.forEach(function (child, index) {
+      var childKey = getKey(child);
+
+      var childBoundingBox = childrenBoundingBoxes[index];
+
+      if (!childKey) {
+        return;
+      }
+
+      _this8.setChildData(childKey, {
+        boundingBox: childBoundingBox
+      });
+    });
+  };
+
+  FlipMove.prototype.computeInitialStyles = function computeInitialStyles(child) {
+    if (child.appearing) {
+      return this.props.appearAnimation ? this.props.appearAnimation.from : {};
+    } else if (child.entering) {
+      if (!this.props.enterAnimation) {
+        return {};
+      }
+      // If this child was in the middle of leaving, it still has its
+      // absolute positioning styles applied. We need to undo those.
+      return _extends({
+        position: '',
+        top: '',
+        left: '',
+        right: '',
+        bottom: ''
+      }, this.props.enterAnimation.from);
+    } else if (child.leaving) {
+      return this.props.leaveAnimation ? this.props.leaveAnimation.from : {};
+    }
+
+    var childData = this.getChildData(getKey(child));
+    var childDomNode = childData.domNode;
+    var childBoundingBox = childData.boundingBox;
+    var parentBoundingBox = this.parentData.boundingBox;
+
+    if (!childDomNode) {
+      return {};
+    }
+
+    var _getPositionDelta2 = getPositionDelta({
+      childDomNode: childDomNode,
+      childBoundingBox: childBoundingBox,
+      parentBoundingBox: parentBoundingBox,
+      getPosition: this.props.getPosition
+    }),
+        dX = _getPositionDelta2[0],
+        dY = _getPositionDelta2[1];
+
+    return {
+      transform: 'translate(' + dX + 'px, ' + dY + 'px)'
+    };
+  };
+
+  // eslint-disable-next-line class-methods-use-this
+
+
+  FlipMove.prototype.isAnimationDisabled = function isAnimationDisabled(props) {
+    // If the component is explicitly passed a `disableAllAnimations` flag,
+    // we can skip this whole process. Similarly, if all of the numbers have
+    // been set to 0, there is no point in trying to animate; doing so would
+    // only cause a flicker (and the intent is probably to disable animations)
+    // We can also skip this rigamarole if there's no browser support for it.
+    return noBrowserSupport || props.disableAllAnimations || props.duration === 0 && props.delay === 0 && props.staggerDurationBy === 0 && props.staggerDelayBy === 0;
+  };
+
+  FlipMove.prototype.findChildByKey = function findChildByKey(key) {
+    return find(function (child) {
+      return getKey(child) === key;
+    }, this.state.children);
+  };
+
+  FlipMove.prototype.hasChildData = function hasChildData(key) {
+    // Object has some built-in properties on its prototype, such as toString.  hasOwnProperty makes
+    // sure that key is present on childrenData itself, not on its prototype.
+    return Object.prototype.hasOwnProperty.call(this.childrenData, key);
+  };
+
+  FlipMove.prototype.getChildData = function getChildData(key) {
+    return this.hasChildData(key) ? this.childrenData[key] : {};
+  };
+
+  FlipMove.prototype.setChildData = function setChildData(key, data) {
+    this.childrenData[key] = _extends({}, this.getChildData(key), data);
+  };
+
+  FlipMove.prototype.removeChildData = function removeChildData(key) {
+    delete this.childrenData[key];
+    this.setState(function (prevState) {
+      return _extends({}, prevState, {
+        children: prevState.children.filter(function (child) {
+          return child.element.key !== key;
+        })
+      });
+    });
+  };
+
+  FlipMove.prototype.createHeightPlaceholder = function createHeightPlaceholder() {
+    var _this9 = this;
+
+    var typeName = this.props.typeName;
+
+    // If requested, create an invisible element at the end of the list.
+    // Its height will be modified to prevent the container from collapsing
+    // prematurely.
+
+    var isContainerAList = typeName === 'ul' || typeName === 'ol';
+    var placeholderType = isContainerAList ? 'li' : 'div';
+
+    return Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(placeholderType, {
+      key: 'height-placeholder',
+      ref: function ref(domNode) {
+        _this9.heightPlaceholderData.domNode = domNode;
+      },
+      style: { visibility: 'hidden', height: 0 }
+    });
+  };
+
+  FlipMove.prototype.childrenWithRefs = function childrenWithRefs() {
+    var _this10 = this;
+
+    // We need to clone the provided children, capturing a reference to the
+    // underlying DOM node. Flip Move needs to use the React escape hatches to
+    // be able to do its calculations.
+    return this.state.children.map(function (child) {
+      return Object(react__WEBPACK_IMPORTED_MODULE_0__["cloneElement"])(child.element, {
+        ref: function ref(element) {
+          // Stateless Functional Components are not supported by FlipMove,
+          // because they don't have instances.
+          if (!element) {
+            return;
+          }
+
+          var domNode = getNativeNode(element);
+          _this10.setChildData(getKey(child), { domNode: domNode });
+        }
+      });
+    });
+  };
+
+  FlipMove.prototype.render = function render() {
+    var _this11 = this;
+
+    var _props2 = this.props,
+        typeName = _props2.typeName,
+        delegated = _props2.delegated,
+        leaveAnimation = _props2.leaveAnimation,
+        maintainContainerHeight = _props2.maintainContainerHeight;
+
+
+    var children = this.childrenWithRefs();
+    if (leaveAnimation && maintainContainerHeight) {
+      children.push(this.createHeightPlaceholder());
+    }
+
+    if (!typeName) return children;
+
+    var props = _extends({}, delegated, {
+      children: children,
+      ref: function ref(node) {
+        _this11.parentData.domNode = node;
+      }
+    });
+
+    return Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(typeName, props);
+  };
+
+  return FlipMove;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+var enhancedFlipMove = /* #__PURE__ */propConverter(FlipMove$1);
+
+/**
+ * React Flip Move
+ * (c) 2016-present Joshua Comeau
+ */
+
+/* harmony default export */ __webpack_exports__["default"] = (enhancedFlipMove);
+
 
 /***/ }),
 
@@ -3726,6 +7551,59 @@ class Footer extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
 
 /***/ }),
 
+/***/ "./src/components/loading/loading.tsx":
+/*!********************************************!*\
+  !*** ./src/components/loading/loading.tsx ***!
+  \********************************************/
+/*! exports provided: Loading */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Loading", function() { return Loading; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _loading_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./loading.scss */ "./src/components/loading/loading.scss");
+/* harmony import */ var _loading_scss__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_loading_scss__WEBPACK_IMPORTED_MODULE_1__);
+var _jsxFileName = "C:\\Users\\Anton\\Desktop\\React\\movies-react\\movies-react\\src\\components\\loading\\loading.tsx";
+
+
+class Loading extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "loading",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 7
+      },
+      __self: this
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
+      className: "spinner",
+      viewBox: "0 0 50 50",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 8
+      },
+      __self: this
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", {
+      className: "path",
+      cx: "25",
+      cy: "25",
+      r: "20",
+      fill: "none",
+      strokeWidth: "5",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 9
+      },
+      __self: this
+    })));
+  }
+
+}
+
+/***/ }),
+
 /***/ "./src/constants/actionTypes.ts":
 /*!**************************************!*\
   !*** ./src/constants/actionTypes.ts ***!
@@ -3985,6 +7863,193 @@ function mapStateToProps(state) {
 
 /***/ }),
 
+/***/ "./src/pages/film/film.tsx":
+/*!*********************************!*\
+  !*** ./src/pages/film/film.tsx ***!
+  \*********************************/
+/*! exports provided: Film */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Film", function() { return Film; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _film_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./film.scss */ "./src/pages/film/film.scss");
+/* harmony import */ var _film_scss__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_film_scss__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
+/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_2__);
+var _jsxFileName = "C:\\Users\\Anton\\Desktop\\React\\movies-react\\movies-react\\src\\pages\\film\\film.tsx";
+
+
+
+class Film extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  static getInitialProps({
+    store
+  }) {}
+
+  render() {
+    const movie = this.props.movie;
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
+      href: `/movie?id=${movie.id}`,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 19
+      },
+      __self: this
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "film-item",
+      onClick: () => this.props.selectMovie(movie.id),
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 20
+      },
+      __self: this
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+      src: movie.poster_path,
+      className: "film-item__poster",
+      alt: "Poster",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 24
+      },
+      __self: this
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      className: "film-item__title",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 29
+      },
+      __self: this
+    }, movie.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      className: "film-item__release",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 30
+      },
+      __self: this
+    }, movie.release_date.slice(0, 4)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      className: "film-item__genres",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 33
+      },
+      __self: this
+    }, movie.genres.join(' & '))));
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/pages/films-content/films-content.tsx":
+/*!***************************************************!*\
+  !*** ./src/pages/films-content/films-content.tsx ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _films_content_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./films-content.scss */ "./src/pages/films-content/films-content.scss");
+/* harmony import */ var _films_content_scss__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_films_content_scss__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _film_film__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../film/film */ "./src/pages/film/film.tsx");
+/* harmony import */ var _services_httpRequest__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/httpRequest */ "./src/services/httpRequest.ts");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _actions_movies_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions/movies-actions */ "./src/actions/movies-actions.ts");
+/* harmony import */ var _constants_constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../constants/constants */ "./src/constants/constants.ts");
+/* harmony import */ var react_flip_move__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-flip-move */ "./node_modules/react-flip-move/dist/react-flip-move.es.js");
+var _jsxFileName = "C:\\Users\\Anton\\Desktop\\React\\movies-react\\movies-react\\src\\pages\\films-content\\films-content.tsx";
+
+
+
+
+
+
+
+
+
+function mapStateToProps(state) {
+  return {
+    movies: state.movies,
+    selectedMovie: state.selectedMovie
+  };
+}
+
+class FilmsContent extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  static getInitialProps({
+    store
+  }) {}
+
+  componentDidMount() {
+    if (!this.props.selectedMovie) {
+      Object(_services_httpRequest__WEBPACK_IMPORTED_MODULE_3__["http"])(_constants_constants__WEBPACK_IMPORTED_MODULE_6__["CONSTANTS"].URL_FILMS).then(res => {
+        this.props.dispatch(Object(_actions_movies_actions__WEBPACK_IMPORTED_MODULE_5__["getMovies"])([...res.data]));
+        this.props.dispatch(Object(_actions_movies_actions__WEBPACK_IMPORTED_MODULE_5__["getUnsortedMovies"])([...res.data]));
+      }).finally(() => this.props.dispatch(Object(_actions_movies_actions__WEBPACK_IMPORTED_MODULE_5__["changeLoadingStatus"])(false)));
+    }
+  }
+
+  selectMovie(id) {
+    this.props.dispatch(Object(_actions_movies_actions__WEBPACK_IMPORTED_MODULE_5__["changeSortType"])(''));
+    this.props.dispatch(Object(_actions_movies_actions__WEBPACK_IMPORTED_MODULE_5__["selectMovieId"])(id));
+    const url = `/${id}`;
+    Object(_services_httpRequest__WEBPACK_IMPORTED_MODULE_3__["http"])(_constants_constants__WEBPACK_IMPORTED_MODULE_6__["CONSTANTS"].URL_FILMS + url).then(movie => {
+      this.props.dispatch(Object(_actions_movies_actions__WEBPACK_IMPORTED_MODULE_5__["selectedMovie"])(movie));
+      const url = `?search=${movie.genres[0]}&searchBy=${_constants_constants__WEBPACK_IMPORTED_MODULE_6__["CONSTANTS"].SEARCH_BY_GENRE_STATE}`;
+      Object(_services_httpRequest__WEBPACK_IMPORTED_MODULE_3__["http"])(_constants_constants__WEBPACK_IMPORTED_MODULE_6__["CONSTANTS"].URL_FILMS + url).then(res => {
+        this.props.dispatch(Object(_actions_movies_actions__WEBPACK_IMPORTED_MODULE_5__["getMovies"])([...res.data]));
+        this.props.dispatch(Object(_actions_movies_actions__WEBPACK_IMPORTED_MODULE_5__["getUnsortedMovies"])([...res.data]));
+      });
+    }).finally(() => this.props.dispatch(Object(_actions_movies_actions__WEBPACK_IMPORTED_MODULE_5__["changeLoadingStatus"])(false)));
+    const interval = setInterval(() => {
+      window.scrollBy(0, -70);
+
+      if (window.scrollY === 0) {
+        clearInterval(interval);
+      }
+    }, 1000 / 60);
+  }
+
+  render() {
+    if (this.props.movies.length > 0) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_flip_move__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        className: "films-container",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 77
+        },
+        __self: this
+      }, this.props.movies.map(movie => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_film_film__WEBPACK_IMPORTED_MODULE_2__["Film"], {
+        key: movie.id.toString(),
+        movie: movie,
+        selectMovie: this.selectMovie.bind(this),
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 79
+        },
+        __self: this
+      })));
+    } else {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "films-container",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 88
+        },
+        __self: this
+      }, "FILMS NOT FOUND");
+    }
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_4__["connect"])(mapStateToProps)(FilmsContent));
+
+/***/ }),
+
 /***/ "./src/pages/index.tsx":
 /*!*****************************!*\
   !*** ./src/pages/index.tsx ***!
@@ -3994,45 +8059,107 @@ function mapStateToProps(state) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Index; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_footer_footer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/footer/footer */ "./src/components/footer/footer.tsx");
-/* harmony import */ var _containers_header_header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../containers/header/header */ "./src/containers/header/header.tsx");
+/* harmony import */ var _main_page_main_page__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./main-page/main-page */ "./src/pages/main-page/main-page.tsx");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _components_loading_loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/loading/loading */ "./src/components/loading/loading.tsx");
 var _jsxFileName = "C:\\Users\\Anton\\Desktop\\React\\movies-react\\movies-react\\src\\pages\\index.tsx";
 
 
 
+
+
 class Index extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  static getInitialProps({
+    state
+  }) {}
+
+  loading() {
+    if (this.props.loadingStatus) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_loading_loading__WEBPACK_IMPORTED_MODULE_3__["Loading"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 12
+        },
+        __self: this
+      });
+    }
+  }
+
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_containers_header_header__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, this.loading(), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_main_page_main_page__WEBPACK_IMPORTED_MODULE_1__["MainPage"], {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 9
+        lineNumber: 20
       },
       __self: this
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_footer_footer__WEBPACK_IMPORTED_MODULE_1__["Footer"], {
+    }));
+  }
+
+}
+
+function mapStateToProps(state) {
+  return {
+    loadingStatus: state.loadingStatus
+  };
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps)(Index));
+
+/***/ }),
+
+/***/ "./src/pages/main-page/main-page.tsx":
+/*!*******************************************!*\
+  !*** ./src/pages/main-page/main-page.tsx ***!
+  \*******************************************/
+/*! exports provided: MainPage */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MainPage", function() { return MainPage; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _containers_header_header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../containers/header/header */ "./src/containers/header/header.tsx");
+/* harmony import */ var _films_content_films_content__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../films-content/films-content */ "./src/pages/films-content/films-content.tsx");
+/* harmony import */ var _components_footer_footer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/footer/footer */ "./src/components/footer/footer.tsx");
+var _jsxFileName = "C:\\Users\\Anton\\Desktop\\React\\movies-react\\movies-react\\src\\pages\\main-page\\main-page.tsx";
+
+
+
+
+class MainPage extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  static getInitialProps({
+    store
+  }) {}
+
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 10
+        lineNumber: 12
       },
       __self: this
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("style", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_containers_header_header__WEBPACK_IMPORTED_MODULE_1__["default"], {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 11
+        lineNumber: 13
       },
       __self: this
-    }, `
-                        body {
-                            margin: 0;
-                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
-                                'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-                                'Helvetica Neue', sans-serif;
-                            -webkit-font-smoothing: antialiased;
-                            -moz-osx-font-smoothing: grayscale;
-                        }
-                    `));
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_films_content_films_content__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 14
+      },
+      __self: this
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_footer_footer__WEBPACK_IMPORTED_MODULE_3__["Footer"], {
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 15
+      },
+      __self: this
+    }));
   }
 
 }
@@ -4150,7 +8277,7 @@ const store = Object(redux__WEBPACK_IMPORTED_MODULE_0__["createStore"])(_reducer
 
 /***/ }),
 
-/***/ 2:
+/***/ 5:
 /*!***************************************************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2F&absolutePagePath=C%3A%5CUsers%5CAnton%5CDesktop%5CReact%5Cmovies-react%5Cmovies-react%5Csrc%5Cpages%5Cindex.tsx ***!
   \***************************************************************************************************************************************************************/
@@ -4173,5 +8300,5 @@ module.exports = dll_0fb095e325d7ebf261c3;
 
 /***/ })
 
-},[[2,"static/runtime/webpack.js","styles"]]]);
+},[[5,"static/runtime/webpack.js","styles"]]]);
 //# sourceMappingURL=index.js.map

@@ -1,0 +1,96 @@
+@import '../../constants/style-constants.scss';
+.selected-movie {
+    background: url(../../constants/bg.jpg) no-repeat;
+    background-size: cover;
+    background-position-y: center;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    color: white;
+    overflow: hidden;
+    min-height: 100px;
+    .selected-movie__content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 20px;
+        @media (min-width: 1000px) {
+            width: 1000px;
+        }
+        .selected-movie__head {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            .button {
+                @include button;
+            }
+            .selected-movie__app-name {
+                font-size: $f-size-large;
+            }
+        }
+        .selected-movie__content-container {
+            display: flex;
+            @media (max-width: 500px) {
+                flex-direction: column;
+            }
+            .selected-movie__poster {
+                height: 450px;
+                margin-right: 20px;
+                border-radius: 20px;
+                @media (max-width: 500px) {
+                    margin-right: 0;
+                    margin-bottom: 20px;
+                }
+            }
+            .selected-movie__info {
+                padding: 20px;
+                width: 100%;
+                @media (max-width: 500px) {
+                    padding: 0;
+                }
+                .selected-movie__title-rating {
+                    display: flex;
+                    align-items: center;
+                    .selected-movie__title {
+                        font-size: $f-size-large;
+                        color: $main-color;
+                        margin-right: 30px;
+                    }
+                    .selected-movie__rating {
+                        display: inline-flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 10px;
+                        border: solid 1px;
+                        width: 20px;
+                        border-radius: 50%;
+                        color: rgb(72, 255, 0);
+                    }
+                }
+                .selected-movie__date-duration {
+                    * {
+                        margin-right: 20px;
+                    }
+                }
+                .selected-movie__overview {
+                    margin-top: 20px;
+                }
+            }
+        }
+    }
+}
+.movies-genre {
+    display: flex;
+    width: 100%;
+    background-color: rgb(211, 211, 211);
+    height: 50px;
+    justify-content: center;
+    margin-bottom: 10px;
+    align-items: center;
+    .movies-genre__genre {
+        width: 100%;
+        @media (min-width: 1000px) {
+            width: 1000px;
+        }
+    }
+}

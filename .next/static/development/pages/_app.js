@@ -5757,7 +5757,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var next_redux_wrapper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! next-redux-wrapper */ "./node_modules/next-redux-wrapper/es6/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _movie_info_movie_info_scss__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./movie-info/movie-info.scss */ "./src/pages/movie-info/movie-info.scss");
+/* harmony import */ var _movie_info_movie_info_scss__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_movie_info_movie_info_scss__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _containers_header_header_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../containers/header/header.scss */ "./src/containers/header/header.scss");
+/* harmony import */ var _containers_header_header_scss__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_containers_header_header_scss__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _components_amount_and_sort_panel_amount_and_sort_panel_scss__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/amount-and-sort-panel/amount-and-sort-panel.scss */ "./src/components/amount-and-sort-panel/amount-and-sort-panel.scss");
+/* harmony import */ var _components_amount_and_sort_panel_amount_and_sort_panel_scss__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_components_amount_and_sort_panel_amount_and_sort_panel_scss__WEBPACK_IMPORTED_MODULE_7__);
 var _jsxFileName = "C:\\Users\\Anton\\Desktop\\React\\movies-react\\movies-react\\src\\pages\\_app.tsx";
+
+
+
 
 
 
@@ -5781,20 +5790,35 @@ class MoviesApp extends next_app__WEBPACK_IMPORTED_MODULE_0___default.a {
       pageProps,
       store
     } = this.props;
-    return react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_1__["Provider"], {
+    return react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_4___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_1__["Provider"], {
       store: store,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 28
+        lineNumber: 32
       },
       __self: this
     }, react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(Component, Object.assign({}, pageProps, {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 29
+        lineNumber: 33
       },
       __self: this
-    })));
+    }))), react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement("style", {
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 35
+      },
+      __self: this
+    }, `
+                    body {
+                        margin: 0;
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+                            'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+                            'Helvetica Neue', sans-serif;
+                        -webkit-font-smoothing: antialiased;
+                        -moz-osx-font-smoothing: grayscale;
+                    }
+                `));
   }
 
 }
@@ -5919,5 +5943,5 @@ module.exports = dll_0fb095e325d7ebf261c3;
 
 /***/ })
 
-},[[0,"static/runtime/webpack.js"]]]);
+},[[0,"static/runtime/webpack.js","styles"]]]);
 //# sourceMappingURL=_app.js.map

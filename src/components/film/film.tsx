@@ -10,6 +10,9 @@ type Props = {
 };
 
 export class Film extends React.Component<Props> {
+
+    static getInitialProps({store}: any) {}
+
     render() {
         const movie = this.props.movie;
         return (

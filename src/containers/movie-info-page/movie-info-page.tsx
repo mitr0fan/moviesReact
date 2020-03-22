@@ -27,6 +27,9 @@ interface PropsWithMatch extends Props {
 }
 
 export class MovieInfoPage extends React.Component<PropsWithMatch> {
+
+    static getInitialProps({store}: any) {}
+
     componentDidMount(): void {
         if (!this.props.selectedMovie) {
             const id = this.props.match.params.id;

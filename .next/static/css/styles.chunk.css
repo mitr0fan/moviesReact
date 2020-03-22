@@ -1,14 +1,90 @@
-.container-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%; }
-  .container-footer .footer {
-    z-index: 5;
-    height: 20px;
+.selected-movie {
+  background: url(./362218b99e21f22ba4bea33b909dca88.jpg) no-repeat;
+  background-size: cover;
+  background-position-y: center;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  color: white;
+  overflow: hidden;
+  min-height: 100px; }
+  .selected-movie .selected-movie__content {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    background-color: #2c2c2c;
-    color: white;
-    text-align: center; }
+    padding: 20px; }
+    @media (min-width: 1000px) {
+      .selected-movie .selected-movie__content {
+        width: 1000px; } }
+    .selected-movie .selected-movie__content .selected-movie__head {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px; }
+      .selected-movie .selected-movie__content .selected-movie__head .button {
+        height: 30px;
+        width: 100px;
+        border: none;
+        border-radius: 5px;
+        background-color: white;
+        outline: none; }
+        .selected-movie .selected-movie__content .selected-movie__head .button:hover {
+          cursor: pointer;
+          transform: scale(1.1); }
+      .selected-movie .selected-movie__content .selected-movie__head .selected-movie__app-name {
+        font-size: 18pt; }
+    .selected-movie .selected-movie__content .selected-movie__content-container {
+      display: flex; }
+      @media (max-width: 500px) {
+        .selected-movie .selected-movie__content .selected-movie__content-container {
+          flex-direction: column; } }
+      .selected-movie .selected-movie__content .selected-movie__content-container .selected-movie__poster {
+        height: 450px;
+        margin-right: 20px;
+        border-radius: 20px; }
+        @media (max-width: 500px) {
+          .selected-movie .selected-movie__content .selected-movie__content-container .selected-movie__poster {
+            margin-right: 0;
+            margin-bottom: 20px; } }
+      .selected-movie .selected-movie__content .selected-movie__content-container .selected-movie__info {
+        padding: 20px;
+        width: 100%; }
+        @media (max-width: 500px) {
+          .selected-movie .selected-movie__content .selected-movie__content-container .selected-movie__info {
+            padding: 0; } }
+        .selected-movie .selected-movie__content .selected-movie__content-container .selected-movie__info .selected-movie__title-rating {
+          display: flex;
+          align-items: center; }
+          .selected-movie .selected-movie__content .selected-movie__content-container .selected-movie__info .selected-movie__title-rating .selected-movie__title {
+            font-size: 18pt;
+            color: #f53978;
+            margin-right: 30px; }
+          .selected-movie .selected-movie__content .selected-movie__content-container .selected-movie__info .selected-movie__title-rating .selected-movie__rating {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            border: solid 1px;
+            width: 20px;
+            border-radius: 50%;
+            color: #48ff00; }
+        .selected-movie .selected-movie__content .selected-movie__content-container .selected-movie__info .selected-movie__date-duration * {
+          margin-right: 20px; }
+        .selected-movie .selected-movie__content .selected-movie__content-container .selected-movie__info .selected-movie__overview {
+          margin-top: 20px; }
+
+.movies-genre {
+  display: flex;
+  width: 100%;
+  background-color: lightgray;
+  height: 50px;
+  justify-content: center;
+  margin-bottom: 10px;
+  align-items: center; }
+  .movies-genre .movies-genre__genre {
+    width: 100%; }
+    @media (min-width: 1000px) {
+      .movies-genre .movies-genre__genre {
+        width: 1000px; } }
 
 .header {
   background: url(./362218b99e21f22ba4bea33b909dca88.jpg) no-repeat;
@@ -113,6 +189,116 @@
     .amount-panel .panel-container * {
       margin-left: 20px;
       border-bottom: solid 3px lightgray; }
+
+.error {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  justify-content: center;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  font-size: large;
+  font-weight: 600;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #f53978; }
+  .error .button {
+    height: 30px;
+    width: 100px;
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+    outline: none;
+    background-color: #f53978;
+    width: fit-content;
+    margin-top: 20px; }
+    .error .button:hover {
+      cursor: pointer;
+      transform: scale(1.1); }
+
+.films-container {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 40px; }
+
+.film-item {
+  margin: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  height: 400px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: solid 3px white; }
+  .film-item .film-item__poster {
+    width: 200px;
+    max-height: 300px; }
+  .film-item .film-item__title {
+    width: 200px;
+    text-align: center;
+    font-weight: 600; }
+  .film-item:hover {
+    border-bottom: solid 3px #f53978;
+    cursor: pointer;
+    background: linear-gradient(to bottom, white, #ffdee9);
+    transform: scale(1.05); }
+  .film-item .film-item__genres {
+    text-align: center; }
+  .film-item .film-item__release {
+    font-size: 10pt; }
+
+.container-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%; }
+  .container-footer .footer {
+    z-index: 5;
+    height: 20px;
+    width: 100%;
+    background-color: #2c2c2c;
+    color: white;
+    text-align: center; }
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 100; }
+  .loading .spinner {
+    animation: rotate 2s linear infinite;
+    z-index: 2;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -25px 0 0 -25px;
+    width: 100px;
+    height: 100px; }
+    .loading .spinner .path {
+      stroke: #f53978;
+      stroke-linecap: round;
+      animation: dash 1.5s ease-in-out infinite; }
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg); } }
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0; }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35; }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124; } }
 
 
 /*# sourceMappingURL=styles.chunk.css.map*/

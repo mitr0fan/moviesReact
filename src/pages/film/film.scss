@@ -1,0 +1,33 @@
+@import '../../constants/style-constants.scss';
+.film-item {
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    height: 400px;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: solid 3px white;
+    .film-item__poster {
+        width: 200px;
+        max-height: 300px;
+    }
+    .film-item__title {
+        width: 200px;
+        text-align: center;
+        font-weight: 600;
+    }
+    &:hover {
+        border-bottom: solid 3px $main-color;
+        cursor: pointer;
+        background: linear-gradient(to bottom, white, rgb(255, 222, 233));
+        transform: scale(1.05);
+    }
+    .film-item__genres {
+        text-align: center;
+    }
+    .film-item__release {
+        font-size: $f-size-small;
+    }
+}

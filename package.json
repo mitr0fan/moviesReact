@@ -2,7 +2,7 @@
     "name": "my-react",
     "version": "0.1.0",
     "private": true,
-    "homepage": "http://gitname.github.io/react-movies",
+    "homepage": "http://gitname.github.io/moviesReact",
     "dependencies": {
         "@babel/core": "7.8.4",
         "@svgr/webpack": "4.3.3",
